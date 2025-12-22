@@ -53,3 +53,11 @@ def flatten_standing(standing_data):
         "away_goals_against": away_goals.get("against"),
         "update": standing_data.get("update")
     }
+    
+@dlt.resource(name="standings", write_disposition="replace")
+def standings_resource():
+    client = APIFootballClient()
+    standings_data = client.get_standings(LEAGUE_ID, SEASON)
+    
+    for standing in standings_data:
+        yield flatten_standing(standing)
