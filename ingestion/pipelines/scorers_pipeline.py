@@ -51,3 +51,56 @@ def flatten_scorer(scorer_data):
         "goals_assists": goals.get("assists"),
         "goals_conceded": goals.get("conceded")
     }
+    
+
+@dlt.resource(name="scorers", write_disposition="replace")
+def scorers_resource():
+    client = APIFootballClient()
+    scorers_data = client.get_top_scorers(LEAGUE_ID, SEASON)
+    
+    for scorer in scorers_data:
+        yield flatten_scorer(scorer)
+
+def run_scorers_pipeline():
+    logger.info("Starting scorers pipeline")
+    init_audit_table()
+    
+    db_path = os.path.abspath(DUCKDB_PATH)
+    pipeline = dlt.pipeline(
+        pipeline_name="scorers_pipeline",
+        destination=dlt.destinations.duckdb(credentials=db_path),
+        dataset_name="raw"
+    )
+    
+    try:
+        logger.info("Fetching top scorers data from API")
+        scorers_gen = scorers_resource()
+        scorers_list = list(scorers_gen)
+        rows_count = len(scorers_list)
+        logger.info(f"Fetched {rows_count} scorers")
+        
+        logger.info("Loading scorers data to DuckDB")
+        info = pipeline.run(scorers_resource())
+        
+        logger.info(f"Successfully loaded {rows_count} scorers to raw.scorers")
+        
+        log_ingestion(
+            source_endpoint="players/topscorers",
+            target_table="scorers",
+            rows_loaded=rows_count,
+            status="success"
+        )
+        
+        return info
+    except Exception as e:
+        logger.error(f"Scorers pipeline failed: {str(e)}")
+        log_ingestion(
+            source_endpoint="players/topscorers",
+            target_table="scorers",
+            rows_loaded=0,
+            status=f"failed: {str(e)}"
+        )
+        raise
+
+if __name__ == "__main__":
+    run_scorers_pipeline()
