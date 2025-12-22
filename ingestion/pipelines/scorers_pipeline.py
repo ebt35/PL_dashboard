@@ -52,7 +52,6 @@ def flatten_scorer(scorer_data):
         "goals_conceded": goals.get("conceded")
     }
     
-
 @dlt.resource(name="scorers", write_disposition="replace")
 def scorers_resource():
     client = APIFootballClient()
