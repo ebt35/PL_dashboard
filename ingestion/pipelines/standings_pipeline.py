@@ -61,3 +61,47 @@ def standings_resource():
     
     for standing in standings_data:
         yield flatten_standing(standing)
+        
+def run_standings_pipeline():
+    logger.info("Starting standings pipeline")
+    init_audit_table()
+    
+    db_path = os.path.abspath(DUCKDB_PATH)
+    pipeline = dlt.pipeline(
+        pipeline_name="standings_pipeline",
+        destination=dlt.destinations.duckdb(credentials=db_path),
+        dataset_name="raw"
+    )
+    
+    try:
+        logger.info("Fetching standings data from API")
+        standings_gen = standings_resource()
+        standings_list = list(standings_gen)
+        rows_count = len(standings_list)
+        logger.info(f"Fetched {rows_count} standings records")
+        
+        logger.info("Loading standings data to DuckDB")
+        info = pipeline.run(standings_resource())
+        
+        logger.info(f"Successfully loaded {rows_count} standings to raw.standings")
+        
+        log_ingestion(
+            source_endpoint="standings",
+            target_table="standings",
+            rows_loaded=rows_count,
+            status="success"
+        )
+        
+        return info
+    except Exception as e:
+        logger.error(f"Standings pipeline failed: {str(e)}")
+        log_ingestion(
+            source_endpoint="standings",
+            target_table="standings",
+            rows_loaded=0,
+            status=f"failed: {str(e)}"
+        )
+        raise
+
+if __name__ == "__main__":
+    run_standings_pipeline()
