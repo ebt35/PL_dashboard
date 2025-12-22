@@ -51,3 +51,15 @@ def flatten_fixture(fixture_data):
         "score_fulltime_home": score.get("fulltime", {}).get("home"),
         "score_fulltime_away": score.get("fulltime", {}).get("away")
     }
+
+def _get_fixtures_data():
+    client = APIFootballClient()
+    first_load = is_first_load("fixtures")
+    
+    if first_load:
+        date_from = "2025-01-01"
+        date_to = date.today().strftime("%Y-%m-%d")
+        return client.get_fixtures(LEAGUE_ID, SEASON, date_from=date_from, date_to=date_to)
+    else:
+        current_date = date.today().strftime("%Y-%m-%d")
+        return client.get_fixtures(LEAGUE_ID, SEASON, date=current_date)
