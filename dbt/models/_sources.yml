@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw data from API ingestion
+    schema: raw
+    tables:
+      - name: teams
+        description: Premier League teams data
+      - name: fixtures
+        description: Match fixtures data
+      - name: standings
+        description: League standings data
+      - name: scorers
+        description: Top scorers data
+
