@@ -63,3 +63,59 @@ def _get_fixtures_data():
     else:
         current_date = date.today().strftime("%Y-%m-%d")
         return client.get_fixtures(LEAGUE_ID, SEASON, date=current_date)
+    
+    
+@dlt.resource(name="fixtures", write_disposition="append")
+def fixtures_resource():
+    fixtures_data = _get_fixtures_data()
+    for fixture in fixtures_data:
+        yield flatten_fixture(fixture)
+
+def run_fixtures_pipeline():
+    logger.info("Starting fixtures pipeline")
+    init_audit_table()
+    
+    first_load = is_first_load("fixtures")
+    if first_load:
+        logger.info("First load detected: fetching fixtures from 2025-01-01 to today")
+    else:
+        logger.info("Incremental load: fetching fixtures for today only")
+    
+    db_path = os.path.abspath(DUCKDB_PATH)
+    pipeline = dlt.pipeline(
+        pipeline_name="fixtures_pipeline",
+        destination=dlt.destinations.duckdb(credentials=db_path),
+        dataset_name="raw"
+    )
+    
+    try:
+        logger.info("Fetching fixtures data from API")
+        fixtures_data = _get_fixtures_data()
+        rows_count = len(fixtures_data)
+        logger.info(f"Fetched {rows_count} fixtures")
+        
+        logger.info("Loading fixtures data to DuckDB")
+        info = pipeline.run(fixtures_resource())
+        
+        logger.info(f"Successfully loaded {rows_count} fixtures to raw.fixtures")
+        
+        log_ingestion(
+            source_endpoint="fixtures",
+            target_table="fixtures",
+            rows_loaded=rows_count,
+            status="success"
+        )
+        
+        return info
+    except Exception as e:
+        logger.error(f"Fixtures pipeline failed: {str(e)}")
+        log_ingestion(
+            source_endpoint="fixtures",
+            target_table="fixtures",
+            rows_loaded=0,
+            status=f"failed: {str(e)}"
+        )
+        raise
+
+if __name__ == "__main__":
+    run_fixtures_pipeline()
