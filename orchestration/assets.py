@@ -79,7 +79,6 @@ def dbt_transformations(context: AssetExecutionContext):
     try:
         os.chdir(dbt_project_dir)
         result = subprocess.run(
-            # ["dbt", "run"],
             ["uv","run","dbt", "run"],
             capture_output=True,
             text=True,
