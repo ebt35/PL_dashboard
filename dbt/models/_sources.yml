@@ -13,4 +13,6 @@ sources:
         description: League standings data
       - name: scorers
         description: Top scorers data
+      - name: players
+        description: players data 
 
