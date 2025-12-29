@@ -10,6 +10,7 @@ from ingestion.pipelines.teams_pipeline import run_teams_pipeline
 from ingestion.pipelines.fixtures_pipeline import run_fixtures_pipeline
 from ingestion.pipelines.standings_pipeline import run_standings_pipeline
 from ingestion.pipelines.scorers_pipeline import run_scorers_pipeline
+from ingestion.pipelines.players_pipeline import run_players_pipeline
 from ingestion.utils.logger import setup_logger
 
 orchestration_logger = setup_logger("orchestration")
@@ -59,13 +60,23 @@ def scorers_data(context: AssetExecutionContext):
     return {"status": "success", "table": "scorers"}
 
 
+@asset(group_name="ingestion", deps=[standings_data])
+def players_data(context: AssetExecutionContext):
+    """Ingest players data from API-Football."""
+    orchestration_logger.info("Orchestration: Starting players pipeline")
+    context.log.info("Running scorers pipeline...")
+    run_players_pipeline()
+    orchestration_logger.info("Orchestration: players pipeline completed")
+    context.log.info("playerspipeline completed.")
+    return {"status": "success", "table": "players"}
+
 dbt_project_dir = os.path.join(project_root, "dbt")
 print("\n \n")
 print(dbt_project_dir)
 
 @asset(
     group_name="transformation",
-    deps=[teams_data, fixtures_data, standings_data, scorers_data],
+    deps=[teams_data, fixtures_data, standings_data, scorers_data, players_data],
 )
 def dbt_transformations(context: AssetExecutionContext):
     """Run dbt transformations on ingested data."""
