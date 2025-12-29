@@ -10,9 +10,22 @@ SELECT DISTINCT
     goals,
     assists,
     goal_involvement,
-    ROUND(CAST(goals AS DOUBLE) / NULLIF(games_appearances, 0), 2) AS goals_per_game,
-    ROUND(CAST(assists AS DOUBLE) / NULLIF(games_appearances, 0), 2) AS assists_per_game,
-    ROUND(CAST(goal_involvement AS DOUBLE) / NULLIF(games_appearances, 0), 2) AS goal_involvement_per_game
-FROM {{ ref('stg_scorers') }}
-ORDER BY goal_involvement DESC, goals DESC
-
+    ROUND(
+        CAST(goals AS DOUBLE)
+        / NULLIF(games_appearances, 0),
+        2
+    ) AS goals_per_game,
+    ROUND(
+        CAST(assists AS DOUBLE)
+        / NULLIF(games_appearances, 0),
+        2
+    ) AS assists_per_game,
+    ROUND(
+        CAST(goal_involvement AS DOUBLE)
+        / NULLIF(games_appearances, 0),
+        2
+    ) AS goal_involvement_per_game
+FROM {{ ref('stg_players') }}
+ORDER BY
+    goal_involvement DESC,
+    goals DESC
