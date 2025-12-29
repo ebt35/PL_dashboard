@@ -100,3 +100,42 @@ class APIFootballClient:
         
         return all_data
 
+    def get_players(self, team_id: int, season: int, league: int) -> List[Dict]:
+        """
+        Fetch all players for a given team and season (with paging)
+        """
+        all_players = []
+        page = 1
+
+        while True:
+            params = {
+                "team": team_id,
+                "season": season,
+                "league": league,   
+                "page": page
+            }
+
+            data = self._make_request("players", params)
+
+            if data.get("errors"):
+                raise Exception(f"API errors: {data['errors']}")
+
+            response = data.get("response", [])
+
+            for item in response:
+                player_data = item.get("player", {})
+                statistics = item.get("statistics", [])
+
+                if statistics:
+                    stat = statistics[0]
+                    record = {**player_data, **stat}
+                    all_players.append(record)
+
+            paging = data.get("paging", {})
+            if paging.get("current", 1) >= paging.get("total", 1):
+                break
+
+            page += 1
+            time.sleep(0.1)
+
+        return all_players
