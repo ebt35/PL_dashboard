@@ -6,10 +6,10 @@ SELECT DISTINCT
     points,
     goals_diff,
     all_played AS matches_played,
-    all_win,
-    all_draw,
-    all_lose,
-    all_goals_for AS goals_scored,
+    all_win  AS wins,
+    all_draw AS draws,
+    all_lose AS losses,
+    all_goals_for     AS goals_scored,
     all_goals_against AS goals_conceded,
     home_played,
     home_win,
@@ -18,6 +18,7 @@ SELECT DISTINCT
     away_played,
     away_win,
     away_draw,
-    away_lose
+    away_lose,
+    form
 FROM {{ ref('src_standings') }}
 
