@@ -6,6 +6,7 @@ from .assets import (
     fixtures_data,
     standings_data,
     scorers_data,
+    players_data,
     dbt_transformations,
     dbt_resource,
 )
@@ -22,6 +23,7 @@ defs = Definitions(
         fixtures_data,
         standings_data,
         scorers_data,
+        players_data,
         dbt_transformations,
     ],
     resources={"dbt": dbt_resource},
