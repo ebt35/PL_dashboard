@@ -139,4 +139,20 @@ def home_page():
     
     Navigate through the pages to explore detailed analytics and insights.
     """)
+
+    st.divider()
     
+    # Architecture PDF
+    st.header("System Architecture")
+    pdf_path = os.path.join(project_root, "docs", "Football_pipeline_architecture.pdf")
+    if os.path.exists(pdf_path):
+        with open(pdf_path, "rb") as pdf_file:
+            st.download_button(
+                label="Download Architecture Document",
+                data=pdf_file,
+                file_name="Football_pipeline_architecture.pdf",
+                mime="application/pdf"
+            )
+        st.caption("Click above to download the complete system architecture documentation")
+    else:
+        st.info("Architecture document not found. Please ensure the PDF is located in the docs folder.") 
