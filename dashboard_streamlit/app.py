@@ -108,3 +108,20 @@ def get_source_data(table_name):
         return df
     finally:
         conn.close()
+        
+
+# =========================
+# HOME
+# =========================
+
+def home_page():
+    st.title("Premier League Data Platform")
+    st.caption("Comprehensive analytics and insights for the 2025/2026 Premier League season")
+    
+    # Logo
+    logo_path = os.path.join(project_root, "utils", "hero-banner.png")
+    if os.path.exists(logo_path):
+        st.image(logo_path, use_container_width=True)
+    
+    st.divider()
+    
