@@ -354,3 +354,19 @@ def league_overview():
     )
     fig.update_layout(height=500)
     st.plotly_chart(fig, use_container_width=True)
+    
+# =========================
+# TEAM OVERVIEW
+# =========================
+
+def team_overview():
+    st.title("Team Overview")
+    st.caption("Detailed analysis of individual team performance and player statistics")
+    
+    team_df = get_team_kpis()
+    
+    selected_team = st.selectbox(
+        "Select Team",
+        options=sorted(team_df['team_name'].unique()),
+        index=0
+    )
