@@ -98,3 +98,13 @@ def get_team_player_kpis(team_name):
         return df
     finally:
         conn.close()
+        
+@st.cache_data
+def get_source_data(table_name):
+    conn = get_db_connection()
+    try:
+        query = f"SELECT DISTINCT * FROM main_src.{table_name} LIMIT 1000"
+        df = conn.execute(query).df()
+        return df
+    finally:
+        conn.close()
