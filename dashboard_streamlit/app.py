@@ -303,3 +303,34 @@ def league_overview():
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
+        
+    st.divider()
+    
+    st.header("👟 Top Assist Providers")
+    st.caption("Leading players ranked by total assists")
+    
+    top_assist_providers= player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
+    top_assist_providers.columns = ['Player', 'Team', 'Assists']
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.dataframe(top_assist_providers.head(10), use_container_width=True, hide_index=True)
+    
+    with col2:
+        st.subheader("Top 5 Assist Providers")
+        st.caption("Visual representation of the league's most assist providers")
+        fig = px.bar(
+            top_assist_providers.head(5),
+            x='Player',
+            y='Assists',
+            labels={'Player': 'Player', 'Assists': 'Assists'},
+            color='Assists',
+            color_continuous_scale='plasma'
+        )
+        fig.update_layout(
+            xaxis_tickangle=-45,
+            height=300,
+            showlegend=False
+        )
+        st.plotly_chart(fig, use_container_width=True)
