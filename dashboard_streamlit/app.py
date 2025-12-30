@@ -156,3 +156,33 @@ def home_page():
         st.caption("Click above to download the complete system architecture documentation")
     else:
         st.info("Architecture document not found. Please ensure the PDF is located in the docs folder.") 
+        
+# =========================
+# LEAGUE OVERVIEW
+# =========================
+
+def league_overview():
+    st.title("League Overview")
+    st.caption("Comprehensive analysis of Premier League team and player performance")
+    
+    team_df = get_team_kpis()
+    player_df = get_player_kpis()
+    
+    st.header("League Summary Statistics")
+    st.caption("Key metrics across all teams in the Premier League")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Teams", len(team_df))
+    with col2:
+        st.metric("Total Goals Scored", int(team_df['goals_scored'].sum()))
+    with col3:
+        st.metric("Total Goals Conceded", int(team_df['goals_conceded'].sum()))
+    with col4:
+        st.metric("Total Matches Played", int(team_df['matches_played'].sum() / 2))
+    
+    st.divider()
+    
+    st.header("Standings")
+    st.caption("Current league table showing team positions ranked by points and goal difference")
+    
