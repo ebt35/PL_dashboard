@@ -125,3 +125,18 @@ def home_page():
     
     st.divider()
     
+  # Premier League Description
+    st.header("About the Premier League")
+    st.markdown("""
+    The **Premier League** is the top tier of English football, featuring 20 of the best clubs in England. 
+    Established in 1992, it has become one of the most watched and competitive football leagues in the world.
+    
+    This platform provides comprehensive data analytics for the **2025/2026 season**, including:
+    - **Team Performance Metrics**: Points, goals, win rates, and league standings
+    - **Player Statistics**: Goals, assists, and goal involvement
+    - **Match Data**: Fixtures, results, and detailed match information
+    - **Real-time Insights**: Interactive visualizations and KPI dashboards
+    
+    Navigate through the pages to explore detailed analytics and insights.
+    """)
+    
