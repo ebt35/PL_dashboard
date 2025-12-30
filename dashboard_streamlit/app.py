@@ -450,3 +450,79 @@ def team_overview():
             delta=f"{team_data['points_per_match'] - team_df['points_per_match'].mean():.2f} vs avg",
             help="Average points earned per match"
         )
+        
+    st.divider()
+    
+    st.subheader("Performance Benchmarking")
+    st.caption("Compare team performance against league averages to identify strengths and weaknesses")
+    
+    league_avg = {
+        'points': team_df['total_points'].mean(),
+        'goals_scored': team_df['goals_scored'].mean(),
+        'goals_conceded': team_df['goals_conceded'].mean(),
+        'goal_difference': team_df['goal_difference'].mean()
+    }
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("**Team vs League Average Comparison**")
+        st.caption("Blue bars show team performance, gray bars show league average. Higher blue bars indicate above-average performance.")
+        comparison_data = pd.DataFrame({
+            'Metric': ['Points', 'Goals Scored', 'Goals Conceded', 'Goal Difference'],
+            'Team': [
+                team_data['total_points'],
+                team_data['goals_scored'],
+                team_data['goals_conceded'],
+                team_data['goal_difference']
+            ],
+            'League Avg': [
+                league_avg['points'],
+                league_avg['goals_scored'],
+                league_avg['goals_conceded'],
+                league_avg['goal_difference']
+            ]
+        })
+        
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=comparison_data['Metric'],
+            y=comparison_data['Team'],
+            name='Team',
+            marker_color='#3498db'
+        ))
+        fig.add_trace(go.Bar(
+            x=comparison_data['Metric'],
+            y=comparison_data['League Avg'],
+            name='League Average',
+            marker_color='#95a5a6'
+        ))
+        fig.update_layout(
+            barmode='group',
+            height=400,
+            yaxis_title="Value",
+            showlegend=True
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        st.markdown("**League Standings Context**")
+        st.caption("Red bar highlights selected team's position. Shows how team ranks among all league teams by points.")
+        position_data = team_df[['team_name', 'total_points']].copy()
+        position_data['is_selected'] = position_data['team_name'] == selected_team
+        
+        fig = px.bar(
+            position_data,
+            x='team_name',
+            y='total_points',
+            color='is_selected',
+            color_discrete_map={True: '#e74c3c', False: '#3498db'},
+            labels={'team_name': 'Team', 'total_points': 'Points'},
+            height=400
+        )
+        fig.update_layout(
+            xaxis_tickangle=-45,
+            showlegend=False,
+            yaxis_title="Points"
+        )
+        st.plotly_chart(fig, use_container_width=True)
