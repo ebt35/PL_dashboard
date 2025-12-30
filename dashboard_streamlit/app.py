@@ -222,3 +222,53 @@ def league_overview():
     
     standings_html += "</tbody></table></div>"
     st.markdown(standings_html, unsafe_allow_html=True)
+    
+    st.divider()
+    
+    st.header("Team Performance Analysis")
+    st.caption("Visual comparison of team performance metrics across the league")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Points Distribution")
+        st.caption("Shows the points gap between teams. Higher bars indicate stronger teams. Color intensity represents point totals.")
+        fig = px.bar(
+            team_df,
+            x='team_name',
+            y='total_points',
+            labels={'team_name': 'Team', 'total_points': 'Points'},
+            color='total_points',
+            color_continuous_scale='viridis'
+        )
+        fig.update_layout(
+            xaxis_tickangle=-45,
+            height=400,
+            showlegend=False,
+            yaxis_title="Points"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        st.subheader("Attacking vs Defensive Performance")
+        st.caption("Compares goals scored (green) vs goals conceded (red) for each team. Teams with more green than red have better attacking/defensive balance.")
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=team_df['team_name'],
+            y=team_df['goals_scored'],
+            name='Goals Scored',
+            marker_color='#2ecc71'
+        ))
+        fig.add_trace(go.Bar(
+            x=team_df['team_name'],
+            y=team_df['goals_conceded'],
+            name='Goals Conceded',
+            marker_color='#e74c3c'
+        ))
+        fig.update_layout(
+            xaxis_tickangle=-45,
+            height=400,
+            barmode='group',
+            yaxis_title="Goals"
+        )
+        st.plotly_chart(fig, use_container_width=True)
