@@ -222,3 +222,4 @@ __pycache__/
 dbt/target/
 dbt/dbt_packages/
 dbt/profiles.yml
+duckdb/football.duckdb
