@@ -272,3 +272,34 @@ def league_overview():
             yaxis_title="Goals"
         )
         st.plotly_chart(fig, use_container_width=True)
+        
+    st.divider()
+    
+    st.header("⚽ Top Goal Scorers")
+    st.caption("Leading players ranked by total goals")
+    
+    top_scorers = player_df[['player_name', 'team_name', 'goals']].sort_values('goals', ascending=False).copy()
+    top_scorers.columns = ['Player', 'Team', 'Goals']
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.dataframe(top_scorers.head(10), use_container_width=True, hide_index=True)
+    
+    with col2:
+        st.subheader("Top 5 Goal Scorers")
+        st.caption("Visual representation of the league's most prolific scorers")
+        fig = px.bar(
+            top_scorers.head(5),
+            x='Player',
+            y='Goals',
+            labels={'Player': 'Player', 'Goals': 'Goals'},
+            color='Goals',
+            color_continuous_scale='plasma'
+        )
+        fig.update_layout(
+            xaxis_tickangle=-45,
+            height=300,
+            showlegend=False
+        )
+        st.plotly_chart(fig, use_container_width=True)
