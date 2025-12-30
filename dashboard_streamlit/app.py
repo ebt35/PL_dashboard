@@ -53,7 +53,7 @@ def get_team_kpis():
         return df
     finally:
         conn.close()
-        
+
 @st.cache_data
 def get_player_kpis():
     conn = get_db_connection()
@@ -76,7 +76,7 @@ def get_player_kpis():
         return df
     finally:
         conn.close()
-        
+
 @st.cache_data
 def get_team_player_kpis(team_name):
     conn = get_db_connection()
@@ -98,7 +98,7 @@ def get_team_player_kpis(team_name):
         return df
     finally:
         conn.close()
-        
+
 @st.cache_data
 def get_source_data(table_name):
     conn = get_db_connection()
@@ -108,7 +108,6 @@ def get_source_data(table_name):
         return df
     finally:
         conn.close()
-        
 
 # =========================
 # HOME
@@ -125,7 +124,7 @@ def home_page():
     
     st.divider()
     
-  # Premier League Description
+    # Premier League Description
     st.header("About the Premier League")
     st.markdown("""
     The **Premier League** is the top tier of English football, featuring 20 of the best clubs in England. 
@@ -139,7 +138,7 @@ def home_page():
     
     Navigate through the pages to explore detailed analytics and insights.
     """)
-
+    
     st.divider()
     
     # Architecture PDF
@@ -155,8 +154,8 @@ def home_page():
             )
         st.caption("Click above to download the complete system architecture documentation")
     else:
-        st.info("Architecture document not found. Please ensure the PDF is located in the docs folder.") 
-        
+        st.info("Architecture document not found. Please ensure the PDF is located in the docs folder.")
+
 # =========================
 # LEAGUE OVERVIEW
 # =========================
@@ -186,7 +185,7 @@ def league_overview():
     st.header("Standings")
     st.caption("Current league table showing team positions ranked by points and goal difference")
     
-  # Create standings with logos
+    # Create standings with logos
     standings_html = "<div style='max-height: 1100px; overflow-y: auto;'>"
     standings_html += "<table style='width: 75%; border-collapse: collapse;'>"
     standings_html += "<thead><tr style='background-color: #f0f0f0; position: sticky; top: 0;'>"
@@ -272,7 +271,7 @@ def league_overview():
             yaxis_title="Goals"
         )
         st.plotly_chart(fig, use_container_width=True)
-        
+    
     st.divider()
     
     st.header("⚽ Top Goal Scorers")
@@ -334,7 +333,7 @@ def league_overview():
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
-        
+    
     st.divider()
     
     st.header("Goal Involvement Analysis")
@@ -396,7 +395,8 @@ def team_overview():
     **Capacity:** {int(team_data['venue_capacity']) if pd.notna(team_data['venue_capacity']) else 'N/A'}
     """
 )
-        
+
+    
     st.divider()
     
     st.subheader("Core Team Performance Metrics")
@@ -450,7 +450,7 @@ def team_overview():
             delta=f"{team_data['points_per_match'] - team_df['points_per_match'].mean():.2f} vs avg",
             help="Average points earned per match"
         )
-        
+    
     st.divider()
     
     st.subheader("Performance Benchmarking")
@@ -526,82 +526,75 @@ def team_overview():
             yaxis_title="Points"
         )
         st.plotly_chart(fig, use_container_width=True)
-        
+    
     st.divider()
     
-    st.subheader("Performance Benchmarking")
-    st.caption("Compare team performance against league averages to identify strengths and weaknesses")
+    st.subheader("Squad Players Statistics")
+    st.caption("Individual player contributions to team's attacking performance")
     
-    league_avg = {
-        'points': team_df['total_points'].mean(),
-        'goals_scored': team_df['goals_scored'].mean(),
-        'goals_conceded': team_df['goals_conceded'].mean(),
-        'goal_difference': team_df['goal_difference'].mean()
-    }
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("**Team vs League Average Comparison**")
-        st.caption("Blue bars show team performance, gray bars show league average. Higher blue bars indicate above-average performance.")
-        comparison_data = pd.DataFrame({
-            'Metric': ['Points', 'Goals Scored', 'Goals Conceded', 'Goal Difference'],
-            'Team': [
-                team_data['total_points'],
-                team_data['goals_scored'],
-                team_data['goals_conceded'],
-                team_data['goal_difference']
-            ],
-            'League Avg': [
-                league_avg['points'],
-                league_avg['goals_scored'],
-                league_avg['goals_conceded'],
-                league_avg['goal_difference']
-            ]
-        })
+    if not player_df.empty:
+        col1, col2, col3 = st.columns([3, 1, 1])
+
+        with col1:
+            display_df = player_df[['player_name', 'goals', 'assists', 'goal_involvement', 'games_appearances']].copy()
+            display_df.columns = ['Player', 'Goals', 'Assists', 'Goal Involvement', 'Appearances']
+            st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+        with col2:
+            st.markdown("**Top 3 Goal Scorers**")
+            st.caption("Players with the most goals")
+            top_goals = player_df.sort_values(by="goals", ascending=False).head(3)
+            for _, row in top_goals.iterrows():
+                st.metric(row['player_name'], f"{int(row['goals'])} Goals")
+
+        with col3:
+            st.markdown("**Top 3 Assist Providers**")
+            st.caption("Players with the most assists")
+            top_assists = player_df.sort_values(by="assists", ascending=False).head(3)
+            for _, row in top_assists.iterrows():
+                st.metric(row['player_name'], f"{int(row['assists'])} Assists")
+
+                
+        st.subheader("Player Performance Visualization")
+        st.caption("Detailed analysis of player contributions to team's attacking output")
         
-        fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=comparison_data['Metric'],
-            y=comparison_data['Team'],
-            name='Team',
-            marker_color='#3498db'
-        ))
-        fig.add_trace(go.Bar(
-            x=comparison_data['Metric'],
-            y=comparison_data['League Avg'],
-            name='League Average',
-            marker_color='#95a5a6'
-        ))
-        fig.update_layout(
-            barmode='group',
-            height=400,
-            yaxis_title="Value",
-            showlegend=True
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        st.markdown("**League Standings Context**")
-        st.caption("Red bar highlights selected team's position. Shows how team ranks among all league teams by points.")
-        position_data = team_df[['team_name', 'total_points']].copy()
-        position_data['is_selected'] = position_data['team_name'] == selected_team
+        col1, col2 = st.columns(2)
         
-        fig = px.bar(
-            position_data,
-            x='team_name',
-            y='total_points',
-            color='is_selected',
-            color_discrete_map={True: '#e74c3c', False: '#3498db'},
-            labels={'team_name': 'Team', 'total_points': 'Points'},
-            height=400
-        )
-        fig.update_layout(
-            xaxis_tickangle=-45,
-            showlegend=False,
-            yaxis_title="Points"
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        with col1:
+            st.markdown("**Goals and Assists Distribution**")
+            st.caption("Shows each player's balance between scoring goals (blue) and providing assists (orange). Players with both high goals and assists are most valuable.")
+            fig = px.bar(
+                player_df.head(10),
+                x='player_name',
+                y=['goals', 'assists'],
+                labels={'player_name': 'Player', 'value': 'Count'},
+                barmode='group',
+                title="Goals vs Assists by Player"
+            )
+            fig.update_layout(
+                xaxis_tickangle=-45,
+                height=400
+            )
+            st.plotly_chart(fig, use_container_width=True)
+        
+        with col2:
+            st.markdown("**Goal Involvement Scatter Analysis**")
+            st.caption("Bubble size represents total goal involvement. Players in top-right quadrant contribute most through both goals and assists. Larger bubbles = higher impact.")
+            fig = px.scatter(
+                player_df,
+                x='goals',
+                y='assists',
+                size='goal_involvement',
+                hover_data=['player_name'],
+                labels={'goals': 'Goals', 'assists': 'Assists'},
+                color='goal_involvement',
+                color_continuous_scale='plasma',
+                title="Player Goal Involvement Analysis"
+            )
+            fig.update_layout(height=400)
+            st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No player data available for this team.")
         
 # =========================
 # SOURCE DATASETS
