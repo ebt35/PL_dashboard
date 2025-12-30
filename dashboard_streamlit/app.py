@@ -53,3 +53,26 @@ def get_team_kpis():
         return df
     finally:
         conn.close()
+        
+@st.cache_data
+def get_player_kpis():
+    conn = get_db_connection()
+    try:
+        query = """
+            SELECT DISTINCT
+                player_name,
+                team_name,
+                goals,
+                assists,
+                goal_involvement,
+                games_appearances,
+                goals_per_game,
+                assists_per_game,
+                goal_involvement_per_game
+            FROM main_mart.mart_player_kpi
+            ORDER BY goal_involvement DESC, goals DESC
+        """
+        df = conn.execute(query).df()
+        return df
+    finally:
+        conn.close()
