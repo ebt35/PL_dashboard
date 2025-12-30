@@ -370,3 +370,83 @@ def team_overview():
         options=sorted(team_df['team_name'].unique()),
         index=0
     )
+    
+    team_data = team_df[team_df['team_name'] == selected_team].iloc[0]
+    player_df = get_team_player_kpis(selected_team)
+    
+    team_rank = team_df[team_df['team_name'] == selected_team].index[0] + 1
+    team_logo = team_data.get('team_logo', None)
+    
+    # Display team logo and name
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if team_logo:
+            st.image(team_logo, width=100)
+        else:
+            st.write("")  # Spacer if no logo
+    with col2:
+        st.header(f"{selected_team}")
+        st.caption(f"Current League Position: {team_rank}")
+        
+        st.markdown(
+    f"""
+    **Founded:** {int(team_data['team_founded']) if pd.notna(team_data['team_founded']) else 'N/A'}  
+    **Venue:** {team_data['venue_name']}  
+    **City:** {team_data['venue_city']}  
+    **Capacity:** {int(team_data['venue_capacity']) if pd.notna(team_data['venue_capacity']) else 'N/A'}
+    """
+)
+        
+    st.divider()
+    
+    st.subheader("Core Team Performance Metrics")
+    st.caption("Essential KPIs showing team's competitive performance in the league")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(
+            "Matches Played",
+            int(team_data['matches_played']),
+            help="Total matches played in the season"
+        )
+    with col2:
+        st.metric(
+            "Total Points",
+            int(team_data['total_points']),
+            help="Total points accumulated (3 for win, 1 for draw)"
+        )
+    with col3:
+        st.metric(
+            "Goals Scored",
+            int(team_data['goals_scored']),
+            help="Total goals scored by the team"
+        )
+    with col4:
+        st.metric(
+            "Goals Conceded",
+            int(team_data['goals_conceded']),
+            help="Total goals conceded by the team"
+        )
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(
+            "Goal Difference",
+            int(team_data['goal_difference']),
+            delta=f"{int(team_data['goal_difference']) - team_df['goal_difference'].mean():.1f} vs avg",
+            help="Difference between goals scored and conceded"
+        )
+    with col2:
+        st.metric(
+            "Win Rate",
+            f"{team_data['win_rate']:.1f}%",
+            delta=f"{team_data['win_rate'] - team_df['win_rate'].mean():.1f}% vs avg",
+            help="Percentage of matches won"
+        )
+    with col3:
+        st.metric(
+            "Points per Match",
+            f"{team_data['points_per_match']:.2f}",
+            delta=f"{team_data['points_per_match'] - team_df['points_per_match'].mean():.2f} vs avg",
+            help="Average points earned per match"
+        )
