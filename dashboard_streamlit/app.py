@@ -186,3 +186,39 @@ def league_overview():
     st.header("Standings")
     st.caption("Current league table showing team positions ranked by points and goal difference")
     
+  # Create standings with logos
+    standings_html = "<div style='max-height: 1100px; overflow-y: auto;'>"
+    standings_html += "<table style='width: 75%; border-collapse: collapse;'>"
+    standings_html += "<thead><tr style='background-color: #f0f0f0; position: sticky; top: 0;'>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>Pos</th>"
+    standings_html += "<th style='padding: 10px; text-align: left;'>Team</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>MP</th>"
+    standings_html += "<th style='padding:10px; text-align:center;'>W</th>"
+    standings_html += "<th style='padding:10px; text-align:center;'>D</th>"
+    standings_html += "<th style='padding:10px; text-align:center;'>L</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>GF</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>GA</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>GD</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>Pts</th>"
+    standings_html += "<th style='padding: 10px; text-align: center;'>Form</th>"
+    standings_html += "</tr></thead><tbody>"
+    
+    for idx, row in team_df.iterrows():
+        pos = idx + 1
+        logo_html = f"<img src='{row['team_logo']}' style='width: 30px; height: 30px; margin-right: 10px; vertical-align: middle;' onerror='this.style.display=\"none\"'>" if row.get('team_logo') else ""
+        standings_html += f"<tr style='border-bottom: 1px solid #ddd;'>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{pos}</td>"
+        standings_html += f"<td style='padding: 10px;'>{logo_html}<strong>{row['team_name']}</strong></td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{int(row['matches_played'])}</td>"
+        standings_html += f"<td style='padding:10px; text-align:center;'>{int(row['wins'])}</td>"
+        standings_html += f"<td style='padding:10px; text-align:center;'>{int(row['draws'])}</td>"
+        standings_html += f"<td style='padding:10px; text-align:center;'>{int(row['losses'])}</td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{int(row['goals_scored'])}</td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{int(row['goals_conceded'])}</td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{int(row['goal_difference'])}</td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'><strong>{int(row['total_points'])}</strong></td>"
+        standings_html += f"<td style='padding: 10px; text-align: center;'>{row.get('form', '')}</td>"
+        standings_html += "</tr>"
+    
+    standings_html += "</tbody></table></div>"
+    st.markdown(standings_html, unsafe_allow_html=True)
