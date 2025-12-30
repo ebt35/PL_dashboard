@@ -334,3 +334,23 @@ def league_overview():
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
+        
+    st.divider()
+    
+    st.header("Goal Involvement Analysis")
+    st.caption("Bubble chart showing the relationship between goals and assists. Larger bubbles indicate higher total goal involvement. Players in the top-right are the most impactful.")
+    
+    top_involvement = player_df[['player_name', 'team_name', 'goal_involvement', 'goals', 'assists']].head(20)
+    
+    fig = px.scatter(
+        top_involvement,
+        x='goals',
+        y='assists',
+        size='goal_involvement',
+        hover_data=['player_name', 'team_name'],
+        labels={'goals': 'Goals', 'assists': 'Assists', 'goal_involvement': 'Goal Involvement'},
+        color='goal_involvement',
+        color_continuous_scale='viridis'
+    )
+    fig.update_layout(height=500)
+    st.plotly_chart(fig, use_container_width=True)
