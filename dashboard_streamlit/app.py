@@ -23,3 +23,33 @@ def get_db_connection():
     db_path = os.path.abspath(DUCKDB_PATH)
     return duckdb.connect(db_path)
 
+@st.cache_data
+def get_team_kpis():
+    conn = get_db_connection()
+    try:
+        query = """
+            SELECT DISTINCT
+                team_name,
+                team_logo,
+                matches_played,
+                total_points,
+                wins,
+                draws,
+                losses,
+                goals_scored,
+                goals_conceded,
+                goal_difference,
+                win_rate,
+                points_per_match,
+                form,
+                team_founded,
+                venue_name,
+                venue_city,
+                venue_capacity
+            FROM main_mart.mart_team_kpi
+            ORDER BY total_points DESC, goal_difference DESC
+        """
+        df = conn.execute(query).df()
+        return df
+    finally:
+        conn.close()
