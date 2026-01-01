@@ -8,11 +8,7 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from ingestion.sources.api_football import APIFootballClient
-from ingestion.utils.audit import init_audit_table, log_ingestion, is_first_load
-from ingestion.utils.logger import setup_logger
 from ingestion.config import LEAGUE_ID, SEASON, DUCKDB_PATH
-
-logger = setup_logger("fixtures_pipeline")
 
 def flatten_fixture(fixture_data):
     fixture = fixture_data.get("fixture", {})
@@ -53,18 +49,15 @@ def flatten_fixture(fixture_data):
     }
 
 def _get_fixtures_data():
-    client = APIFootballClient()
-    first_load = is_first_load("fixtures")
-    
-    if first_load:
-        date_from = "2025-01-01"
-        date_to = date.today().strftime("%Y-%m-%d")
-        return client.get_fixtures(LEAGUE_ID, SEASON, date_from=date_from, date_to=date_to)
-    else:
+    try:
+        client = APIFootballClient()
         current_date = date.today().strftime("%Y-%m-%d")
-        return client.get_fixtures(LEAGUE_ID, SEASON, date=current_date)
-    
-    
+        fixtures = client.get_fixtures(LEAGUE_ID, SEASON, date=current_date)
+        return fixtures if fixtures else []
+    except Exception as e:
+        print(f"Error fetching fixtures data: {str(e)}")
+        raise
+
 @dlt.resource(name="fixtures", write_disposition="append")
 def fixtures_resource():
     fixtures_data = _get_fixtures_data()
@@ -72,14 +65,7 @@ def fixtures_resource():
         yield flatten_fixture(fixture)
 
 def run_fixtures_pipeline():
-    logger.info("Starting fixtures pipeline")
-    init_audit_table()
-    
-    first_load = is_first_load("fixtures")
-    if first_load:
-        logger.info("First load detected: fetching fixtures from 2025-01-01 to today")
-    else:
-        logger.info("Incremental load: fetching fixtures for today only")
+    import duckdb
     
     db_path = os.path.abspath(DUCKDB_PATH)
     pipeline = dlt.pipeline(
@@ -88,34 +74,62 @@ def run_fixtures_pipeline():
         dataset_name="raw"
     )
     
-    try:
-        logger.info("Fetching fixtures data from API")
-        fixtures_data = _get_fixtures_data()
-        rows_count = len(fixtures_data)
-        logger.info(f"Fetched {rows_count} fixtures")
-        
-        logger.info("Loading fixtures data to DuckDB")
-        info = pipeline.run(fixtures_resource())
-        
-        logger.info(f"Successfully loaded {rows_count} fixtures to raw.fixtures")
-        
-        log_ingestion(
-            source_endpoint="fixtures",
-            target_table="fixtures",
-            rows_loaded=rows_count,
-            status="success"
-        )
-        
-        return info
-    except Exception as e:
-        logger.error(f"Fixtures pipeline failed: {str(e)}")
-        log_ingestion(
-            source_endpoint="fixtures",
-            target_table="fixtures",
-            rows_loaded=0,
-            status=f"failed: {str(e)}"
-        )
-        raise
+    # Get fixtures data first to check if we have data
+    fixtures_data = _get_fixtures_data()
+    
+    # If no data, ensure table structure exists
+    if not fixtures_data:
+        conn = duckdb.connect(db_path)
+        try:
+            # Check if table exists
+            result = conn.execute("""
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = 'raw' AND table_name = 'fixtures'
+            """).fetchone()
+            
+            # If table doesn't exist, create empty table with proper schema
+            if result[0] == 0:
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS raw.fixtures (
+                        fixture_id INTEGER,
+                        fixture_date VARCHAR,
+                        fixture_timestamp BIGINT,
+                        fixture_timezone VARCHAR,
+                        fixture_referee VARCHAR,
+                        venue_id INTEGER,
+                        venue_name VARCHAR,
+                        venue_city VARCHAR,
+                        status_long VARCHAR,
+                        status_short VARCHAR,
+                        status_elapsed INTEGER,
+                        league_id INTEGER,
+                        league_name VARCHAR,
+                        league_country VARCHAR,
+                        league_season INTEGER,
+                        league_round VARCHAR,
+                        home_team_id INTEGER,
+                        home_team_name VARCHAR,
+                        home_team_winner BOOLEAN,
+                        away_team_id INTEGER,
+                        away_team_name VARCHAR,
+                        away_team_winner BOOLEAN,
+                        home_goals INTEGER,
+                        away_goals INTEGER,
+                        score_halftime_home INTEGER,
+                        score_halftime_away INTEGER,
+                        score_fulltime_home INTEGER,
+                        score_fulltime_away INTEGER
+                    )
+                """)
+        finally:
+            conn.close()
+        return {"status": "success", "rows": 0, "message": "No fixtures for today, table structure created"}
+    
+    # Run pipeline with data
+    info = pipeline.run(fixtures_resource())
+    return info
 
 if __name__ == "__main__":
     run_fixtures_pipeline()
+
