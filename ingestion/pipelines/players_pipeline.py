@@ -1,19 +1,16 @@
 import dlt
 import os
 import sys
-import time
 
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+project_root = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from ingestion.sources.api_football import APIFootballClient
-from ingestion.utils.audit import init_audit_table, log_ingestion
-from ingestion.utils.logger import setup_logger
 from ingestion.config import LEAGUE_ID, SEASON, DUCKDB_PATH
 from ingestion.utils.duckdb_setup import get_connection
-
-logger = setup_logger("players_pipeline")
 
 
 def flatten_player(player_data: dict) -> dict:
@@ -59,8 +56,6 @@ def players_resource():
     team_ids = get_team_ids()
 
     for team_id in team_ids:
-        logger.info(f"Fetching players for team_id={team_id}")
-
         players = client.get_players(
             team_id=team_id,
             season=SEASON,
@@ -72,9 +67,6 @@ def players_resource():
 
 
 def run_players_pipeline():
-    logger.info("Starting players pipeline")
-    init_audit_table()
-
     db_path = os.path.abspath(DUCKDB_PATH)
     pipeline = dlt.pipeline(
         pipeline_name="players_pipeline",
@@ -82,31 +74,7 @@ def run_players_pipeline():
         dataset_name="raw",
     )
 
-    try:
-        players_gen = players_resource()
-        players_list = list(players_gen)
-        rows_count = len(players_list)
-
-        logger.info(f"Loading {rows_count} players into DuckDB")
-        pipeline.run(players_resource())
-
-        log_ingestion(
-            source_endpoint="players",
-            target_table="players",
-            rows_loaded=rows_count,
-            status="success",
-        )
-
-        logger.info(f"Successfully loaded {rows_count} players to raw.players")
-    except Exception as e:
-        logger.error(f"Players pipeline failed: {str(e)}")
-        log_ingestion(
-            source_endpoint="players",
-            target_table="players",
-            rows_loaded=0,
-            status=f"failed: {str(e)}",
-        )
-        raise
+    return pipeline.run(players_resource())
 
 
 if __name__ == "__main__":
