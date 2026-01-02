@@ -1,15 +1,40 @@
-Welcome to your new dbt project!
+# dbt Football Pipeline
 
-### Using the starter project
+## Setup
 
-Try running the following commands:
-- dbt run
-- dbt test
+1. Install dbt-duckdb:
+   ```bash
+   uv add dbt-duckdb
+   ```
 
+2. Set environment variable (optional):
+   ```bash
+   export DBT_DUCKDB_PATH=duckdb/football.duckdb
+   ```
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+3. Run dbt:
+   ```bash
+   cd dbt
+   dbt debug
+   dbt run
+   dbt test
+   ```
+
+## Models
+
+### Source Layer (src)
+- `src_teams` - Raw teams data
+- `src_fixtures` - Raw fixtures data
+- `src_standings` - Raw standings data
+- `src_scorers` - Raw scorers data
+
+### Staging Layer (stg)
+- `stg_teams` - Cleaned teams data
+- `stg_fixtures` - Cleaned fixtures data with completion status
+- `stg_standings` - Cleaned standings data with renamed columns
+- `stg_scorers` - Cleaned scorers data with calculated goal involvement
+- `stg_players` - Cleaned pleyers data with calculated goal involvement
+
+### Mart Layer (mart)
+- `mart_team_kpi` - Team KPIs (matches_played, total_points, goals_scored, goals_conceded)
+- `mart_player_kpi` - Player KPIs (goals, assists, goal_involvement)
