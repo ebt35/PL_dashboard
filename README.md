@@ -103,27 +103,12 @@ PL_dashboard/
 
 1. Create and activate a virtual environment:
 
-   **Windows (PowerShell):**
-   ```powershell
-   python -m venv venv
-   .\venv\Scripts\Activate.ps1
    ```
-
-   **Windows (Command Prompt):**
-   ```cmd
-   python -m venv venv
-   venv\Scripts\activate.bat
+   uv init
    ```
-
-   **Mac/Linux (Ubuntu):**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
 3. Configure environment variables in `.env`:
@@ -149,7 +134,7 @@ PL_dashboard/
 ## MVP Scope
 
 **Included:**
-- Fixtures, Teams, Standings, Top Scorers data
+- Fixtures, Teams, Standings, Top Scorers and players data
 - Basic team and player KPIs
 - Automated ELT pipeline
 
