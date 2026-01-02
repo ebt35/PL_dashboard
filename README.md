@@ -121,15 +121,10 @@ PL_dashboard/
    ```bash
    dagster dev -m dagster_defs
    ```
-   
-   Or if auto-discovery works:
-   ```bash
-   dagster dev
-   ```
 
 5. Launch Streamlit dashboard:
    ```bash
-   streamlit run dashboard_streamlit/app.py
+   uv run streamlit run dashboard_streamlit/app.py
    ```
 
 ## MVP Scope
