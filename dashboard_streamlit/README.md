@@ -1,0 +1,50 @@
+# Streamlit Dashboard
+
+Premier League Data Platform - Streamlit Dashboard
+
+## Features
+
+- **Homepage**
+- **League Overview**: League-wide statistics, league table, top scorers, and performance charts
+- **Team Overview**: Team-specific KPIs and player statistics
+- **Source Datasets**: Raw data source from API-Football
+
+## KPIs Displayed
+
+### Team KPIs
+- Matches played
+- Win
+- Draw
+- Loss
+- Goal for
+- Goal against
+- Goal difference
+- Total points
+- Form
+
+### Player KPIs
+- Goals
+- Assists
+- Goal involvement
+- Goals per game
+- Assists per game
+
+## Usage
+
+Run the dashboard:
+```bash
+cd dashboard_streamlit
+
+uv run streamlit run app.py
+```
+
+The dashboard will open in your browser at `http://localhost:8501`
+
+## Data Source
+
+The dashboard reads from:
+- `mart.mart_team_kpi` - Team KPIs
+- `mart.mart_player_kpi` - Player KPIs
+
+Make sure to run the Dagster pipeline first to populate these tables.
+
