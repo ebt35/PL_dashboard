@@ -15,9 +15,9 @@
 3. Run dbt:
    ```bash
    cd dbt
-   dbt debug
-   dbt run
-   dbt test
+   uv run dbt debug
+   uv run dbt run
+   uv run dbt test
    ```
 
 ## Models
