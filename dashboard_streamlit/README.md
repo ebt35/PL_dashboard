@@ -4,8 +4,8 @@ Premier League Data Platform - Streamlit Dashboard
 
 ## Features
 
-- **Homepage**
-- **League Overview**: League-wide statistics, league table, top scorers, and performance charts
+- **Homepage**: About the Premier League, system architecture
+- **League Overview**: League-wide statistics, league table, top scorers, top assist providers and performance charts
 - **Team Overview**: Team-specific KPIs and player statistics
 - **Source Datasets**: Raw data source from API-Football
 
