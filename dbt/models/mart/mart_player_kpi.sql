@@ -9,6 +9,8 @@ SELECT DISTINCT
     games_position,
     goals,
     assists,
+    yellow_cards,
+    red_cards,
     goal_involvement,
     ROUND(
         CAST(goals AS DOUBLE)

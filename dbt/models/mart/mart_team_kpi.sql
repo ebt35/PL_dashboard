@@ -23,10 +23,21 @@ SELECT
         CAST(s.points AS DOUBLE) / NULLIF(s.matches_played, 0),
         2
     ) AS points_per_match,
-    s.form
+    s.form,
+    COALESCE(p.yellow_cards, 0) AS yellow_cards,
+    COALESCE(p.red_cards, 0)    AS red_cards
 FROM {{ ref('stg_standings') }} s
 LEFT JOIN {{ ref('stg_teams') }} t
     ON s.team_id = t.team_id
+LEFT JOIN (
+    SELECT
+        team_id,
+        SUM(COALESCE(yellow_cards, 0)) AS yellow_cards,
+        SUM(COALESCE(red_cards, 0))    AS red_cards
+    FROM {{ ref('stg_players') }}
+    GROUP BY team_id
+) p
+    ON s.team_id = p.team_id
 ORDER BY
     total_points DESC,
     goal_difference DESC
