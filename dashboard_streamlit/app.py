@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 def main():
-    st.sidebar.title("Navigation")
+    st.sidebar.title("PREMIER LEAGUE DASHBOARD")
     page = st.sidebar.selectbox(
         "Select Page",
         ["Home", "League Overview", "Team Overview", "Source Datasets"],
