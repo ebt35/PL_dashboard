@@ -2,7 +2,6 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-
 from data.queries import get_team_kpis, get_player_kpis
 
 def league_overview():
@@ -128,7 +127,23 @@ def league_overview():
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.dataframe(top_scorers.head(10), use_container_width=True, hide_index=True)
+        scorers_html = "<div style='max-height: 420px; overflow-y: auto;'>"
+        scorers_html += "<table style='width: 100%; border-collapse: collapse;'>"
+        scorers_html += "<thead><tr>"
+        scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+        scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
+        scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goals</th>"
+        scorers_html += "</tr></thead><tbody>"
+        
+        for _, row in top_scorers.head(10).iterrows():
+            scorers_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            scorers_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            scorers_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
+            scorers_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goals']) if pd.notna(row['Goals']) else 0}</td>"
+            scorers_html += "</tr>"
+        
+        scorers_html += "</tbody></table></div>"
+        st.markdown(scorers_html, unsafe_allow_html=True)
     
     with col2:
         st.subheader("Top 5 Goal Scorers")
@@ -153,13 +168,29 @@ def league_overview():
     st.header("👟 Top Assist Providers")
     st.caption("Leading players ranked by total assists")
     
-    top_assist_providers= player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
+    top_assist_providers = player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
     top_assist_providers.columns = ['Player', 'Team', 'Assists']
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.dataframe(top_assist_providers.head(10), use_container_width=True, hide_index=True)
+        assists_html = "<div style='max-height: 420px; overflow-y: auto;'>"
+        assists_html += "<table style='width: 100%; border-collapse: collapse;'>"
+        assists_html += "<thead><tr>"
+        assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+        assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
+        assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Assists</th>"
+        assists_html += "</tr></thead><tbody>"
+        
+        for _, row in top_assist_providers.head(10).iterrows():
+            assists_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            assists_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            assists_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
+            assists_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Assists']) if pd.notna(row['Assists']) else 0}</td>"
+            assists_html += "</tr>"
+        
+        assists_html += "</tbody></table></div>"
+        st.markdown(assists_html, unsafe_allow_html=True)
     
     with col2:
         st.subheader("Top 5 Assist Providers")
@@ -199,3 +230,55 @@ def league_overview():
     fig.update_layout(height=500)
     st.plotly_chart(fig, use_container_width=True)
     
+    st.divider()
+
+    st.header("Disciplinary Statistics")
+    st.caption("Players with the most yellow and red cards")
+
+    top_yellow_cards = player_df[['player_name', 'team_name', 'yellow_cards']].sort_values('yellow_cards', ascending=False).copy()
+    top_yellow_cards.columns = ['Player', 'Team', 'Yellow Cards']
+
+    top_red_cards = player_df[['player_name', 'team_name', 'red_cards']].sort_values('red_cards', ascending=False).copy()
+    top_red_cards.columns = ['Player', 'Team', 'Red Cards']
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Yellow Cards")
+        yellow_html = "<div style='max-height: 420px; overflow-y: auto;'>"
+        yellow_html += "<table style='width: 100%; border-collapse: collapse;'>"
+        yellow_html += "<thead><tr>"
+        yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+        yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
+        yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Yellow Cards</th>"
+        yellow_html += "</tr></thead><tbody>"
+
+        for _, row in top_yellow_cards.head(10).iterrows():
+            yellow_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            yellow_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            yellow_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
+            yellow_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Yellow Cards']) if pd.notna(row['Yellow Cards']) else 0}</td>"
+            yellow_html += "</tr>"
+
+        yellow_html += "</tbody></table></div>"
+        st.markdown(yellow_html, unsafe_allow_html=True)
+
+    with col2:
+        st.subheader("Red Cards")
+        red_html = "<div style='max-height: 420px; overflow-y: auto;'>"
+        red_html += "<table style='width: 100%; border-collapse: collapse;'>"
+        red_html += "<thead><tr>"
+        red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+        red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
+        red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Red Cards</th>"
+        red_html += "</tr></thead><tbody>"
+
+        for _, row in top_red_cards.head(10).iterrows():
+            red_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            red_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            red_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
+            red_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Red Cards']) if pd.notna(row['Red Cards']) else 0}</td>"
+            red_html += "</tr>"
+
+        red_html += "</tbody></table></div>"
+        st.markdown(red_html, unsafe_allow_html=True)

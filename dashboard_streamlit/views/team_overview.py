@@ -23,13 +23,12 @@ def team_overview():
     team_rank = team_df[team_df['team_name'] == selected_team].index[0] + 1
     team_logo = team_data.get('team_logo', None)
     
-    # Display team logo and name
     col1, col2 = st.columns([1, 4])
     with col1:
         if team_logo:
             st.image(team_logo, width=100)
         else:
-            st.write("")  # Spacer if no logo
+            st.write("")
     with col2:
         st.header(f"{selected_team}")
         st.caption(f"Current League Position: {team_rank}")
@@ -178,14 +177,35 @@ def team_overview():
     
     st.subheader("Squad Players Statistics")
     st.caption("Individual player contributions to team's attacking performance")
-    
+
     if not player_df.empty:
         col1, col2, col3 = st.columns([3, 1, 1])
 
         with col1:
             display_df = player_df[['player_name', 'goals', 'assists', 'goal_involvement', 'games_appearances']].copy()
             display_df.columns = ['Player', 'Goals', 'Assists', 'Goal Involvement', 'Appearances']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+            table_html = "<div style='max-height: 600px; overflow-y: auto;'>"
+            table_html += "<table style='width: 100%; border-collapse: collapse;'>"
+            table_html += "<thead><tr>"
+            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goals</th>"
+            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Assists</th>"
+            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goal Involvement</th>"
+            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Appearances</th>"
+            table_html += "</tr></thead><tbody>"
+
+            for _, row in display_df.iterrows():
+                table_html += "<tr style='border-bottom: 1px solid #eee;'>"
+                table_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goals']) if pd.notna(row['Goals']) else 0}</td>"
+                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Assists']) if pd.notna(row['Assists']) else 0}</td>"
+                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goal Involvement']) if pd.notna(row['Goal Involvement']) else 0}</td>"
+                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Appearances']) if pd.notna(row['Appearances']) else 0}</td>"
+                table_html += "</tr>"
+
+            table_html += "</tbody></table></div>"
+            st.markdown(table_html, unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Top 3 Goal Scorers**")
@@ -200,13 +220,14 @@ def team_overview():
             top_assists = player_df.sort_values(by="assists", ascending=False).head(3)
             for _, row in top_assists.iterrows():
                 st.metric(row['player_name'], f"{int(row['assists'])} Assists")
-
                 
+        st.divider()
+
         st.subheader("Player Performance Visualization")
         st.caption("Detailed analysis of player contributions to team's attacking output")
-        
+
         col1, col2 = st.columns(2)
-        
+
         with col1:
             st.markdown("**Goals and Assists Distribution**")
             st.caption("Shows each player's balance between scoring goals (blue) and providing assists (orange). Players with both high goals and assists are most valuable.")
@@ -223,7 +244,7 @@ def team_overview():
                 height=400
             )
             st.plotly_chart(fig, use_container_width=True)
-        
+
         with col2:
             st.markdown("**Goal Involvement Scatter Analysis**")
             st.caption("Bubble size represents total goal involvement. Players in top-right quadrant contribute most through both goals and assists. Larger bubbles = higher impact.")
@@ -240,5 +261,34 @@ def team_overview():
             )
             fig.update_layout(height=400)
             st.plotly_chart(fig, use_container_width=True)
+
+        st.divider()
+
+        st.subheader("Disciplinary Records (Squad)")
+        st.caption("Yellow and red cards for players in the selected team")
+
+        cards_df = player_df[["player_name", "yellow_cards", "red_cards"]].copy()
+        cards_df.columns = ["Player", "Yellow Cards", "Red Cards"]
+        cards_df = cards_df.sort_values(by=["Yellow Cards", "Red Cards"], ascending=False)
+
+        cards_html = "<div style='max-height: 600px; overflow-y: auto;'>"
+        cards_html += "<table style='width: 50%; border-collapse: collapse;'>"
+        cards_html += "<thead><tr>"
+        cards_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
+        cards_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Yellow Cards</th>"
+        cards_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Red Cards</th>"
+        cards_html += "</tr></thead><tbody>"
+
+        for _, row in cards_df.iterrows():
+            cards_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            cards_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            cards_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Yellow Cards']) if pd.notna(row['Yellow Cards']) else 0}</td>"
+            cards_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Red Cards']) if pd.notna(row['Red Cards']) else 0}</td>"
+            cards_html += "</tr>"
+
+        cards_html += "</tbody></table></div>"
+        st.markdown(cards_html, unsafe_allow_html=True)
+
     else:
         st.info("No player data available for this team.")
+
