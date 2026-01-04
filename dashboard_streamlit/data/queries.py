@@ -40,6 +40,8 @@ def get_player_kpis():
                 team_name,
                 goals,
                 assists,
+                yellow_cards,
+                red_cards,
                 goal_involvement,
                 games_appearances,
                 goals_per_game,
@@ -53,6 +55,7 @@ def get_player_kpis():
     finally:
         conn.close()
 
+
 @st.cache_data
 def get_team_player_kpis(team_name):
     conn = get_db_connection()
@@ -62,6 +65,8 @@ def get_team_player_kpis(team_name):
                 player_name,
                 goals,
                 assists,
+                yellow_cards,
+                red_cards,
                 goal_involvement,
                 games_appearances,
                 goals_per_game,
