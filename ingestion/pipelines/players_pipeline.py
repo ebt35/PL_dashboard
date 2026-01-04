@@ -17,6 +17,7 @@ def flatten_player(player_data: dict) -> dict:
     team = player_data.get("team", {})
     games = player_data.get("games", {})
     goals = player_data.get("goals", {})
+    cards = player_data.get("cards", {})
 
     return {
         "player_id": player_data.get("id"),
@@ -33,6 +34,8 @@ def flatten_player(player_data: dict) -> dict:
         "games_position": games.get("position"),
         "goals": goals.get("total"),
         "assists": goals.get("assists"),
+        "yellow_cards": cards.get("yellow"),
+        "red_cards": cards.get("red"),
         "goal_involvement": (
             (goals.get("total") or 0) + (goals.get("assists") or 0)
         ),
