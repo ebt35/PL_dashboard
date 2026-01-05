@@ -2,7 +2,8 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from data.queries import get_team_kpis, get_player_kpis
+from data.queries import get_team_kpis, get_player_kpis, get_last_results, get_next_fixtures
+
 
 def league_overview():
     st.title("League Overview")
@@ -14,14 +15,12 @@ def league_overview():
     st.header("League Summary Statistics")
     st.caption("Key metrics across all teams in the Premier League")
     
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Total Teams", len(team_df))
     with col2:
         st.metric("Total Goals Scored", int(team_df['goals_scored'].sum()))
     with col3:
-        st.metric("Total Goals Conceded", int(team_df['goals_conceded'].sum()))
-    with col4:
         st.metric("Total Matches Played", int(team_df['matches_played'].sum() / 2))
     
     st.divider()
@@ -65,7 +64,35 @@ def league_overview():
     
     standings_html += "</tbody></table></div>"
     st.markdown(standings_html, unsafe_allow_html=True)
+    st.caption("If teams finish tied in points at the end of the season, score differential is the tie-breaker.")
     
+    st.divider()
+
+    st.header("Results & Fixtures")
+    st.caption("Latest played matches and upcoming fixtures for the league")
+
+    tab1, tab2 = st.tabs(["Results", "Fixtures"])
+
+    with tab1:
+        results_df = get_last_results(100)
+        if results_df.empty:
+            st.info("No played matches found.")
+        else:
+            # clear dateformat
+            results_df["date"] = pd.to_datetime(results_df["date"]).dt.strftime("%Y-%m-%d %H:%M")
+            results_df.columns = ["Date", "Match", "Score", "Round", "Venue"]
+            st.dataframe(results_df, use_container_width=True, hide_index=True)
+
+    with tab2:
+        fixtures_df = get_next_fixtures(100)
+        if fixtures_df.empty:
+            st.info("No upcoming fixtures found.")
+        else:
+            fixtures_df["date"] = pd.to_datetime(fixtures_df["date"]).dt.strftime("%Y-%m-%d %H:%M")
+            fixtures_df.columns = ["Date", "Match", "Round", "Venue"]
+            st.dataframe(fixtures_df, use_container_width=True, hide_index=True)
+
+
     st.divider()
     
     st.header("Team Performance Analysis")
