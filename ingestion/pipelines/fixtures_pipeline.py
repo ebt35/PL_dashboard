@@ -48,17 +48,23 @@ def flatten_fixture(fixture_data):
         "score_fulltime_away": score.get("fulltime", {}).get("away")
     }
 
+from datetime import date, timedelta
+
 def _get_fixtures_data():
     try:
         client = APIFootballClient()
-        current_date = date.today().strftime("%Y-%m-%d")
-        fixtures = client.get_fixtures(LEAGUE_ID, SEASON, date=current_date)
+
+        #fetch 60 days back and 60 days ahead (adjust as needed)
+        date_from = (date.today() - timedelta(days=60)).strftime("%Y-%m-%d")
+        date_to   = (date.today() + timedelta(days=60)).strftime("%Y-%m-%d")
+
+        fixtures = client.get_fixtures(LEAGUE_ID, SEASON, date_from=date_from, date_to=date_to)
         return fixtures if fixtures else []
     except Exception as e:
         print(f"Error fetching fixtures data: {str(e)}")
         raise
 
-@dlt.resource(name="fixtures", write_disposition="append")
+@dlt.resource(name="fixtures", write_disposition="merge", primary_key="fixture_id")
 def fixtures_resource():
     fixtures_data = _get_fixtures_data()
     for fixture in fixtures_data:
