@@ -260,7 +260,7 @@ def league_overview():
     st.divider()
 
     st.header("Disciplinary Statistics")
-    st.caption("Players with the most yellow and red cards")
+    st.caption("Most booked players across the league")
 
     top_yellow_cards = player_df[['player_name', 'team_name', 'yellow_cards']].sort_values('yellow_cards', ascending=False).copy()
     top_yellow_cards.columns = ['Player', 'Team', 'Yellow Cards']
