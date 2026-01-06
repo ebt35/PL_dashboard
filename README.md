@@ -14,56 +14,54 @@ API-Football → dlt → DuckDB (RAW) → dbt → Dagster → Streamlit
 ## Project Structure
 
 ```
-PL_dashboard/
-├── dashboard_streamlit/        # Streamlit UI
-│   ├── app.py
-│   ├── pages/
-│   └── components/
+PL_DASHBOARD/
+├── assets/                         # Static assets used by the dashboard
+│   ├── hero-banner.png             # Homepage hero image
+│   └── architecture.png            # System architecture diagram
 │
-├── ingestion/                  # dlt ingestion pipelines
-│   ├── pipelines/
-│   │   ├── teams_pipeline.py
-│   │   ├── fixtures_pipeline.py
-│   │   ├── standings_pipeline.py
-│   │   ├── scorers_pipeline.py
-│   │   └── players_pipeline.py
+├── dashboard_streamlit/             # Streamlit application (presentation layer)
+│   ├── app.py                      # Main Streamlit entrypoint
+│   ├── data/                       # Cached / prepared datasets for the UI
+│   ├── views/                      # Page-level views
+│   │   ├── home.py                 # Homepage / introduction
+│   │   ├── league_overview.py      # League-level analytics
+│   │   ├── team_overview.py        # Team-level analytics
+│   │   └── source_datasets.py      # Data source overview / metadata
 │   │
-│   ├── sources/
-│   │   └── api_football.py
-│   │
-│   ├── utils/
-│   │   ├── duckdb_setup.py
-│   │   └── __init__.py
-│   │
+│   └── README.md                   # Dashboard-specific documentation
+│
+├── ingestion/                      # Data ingestion layer (dlt pipelines)
+│   ├── pipelines/                  # API ingestion pipelines
+│   ├── sources/                    # External data sources (API-Football)
+│   ├── utils/                      # Ingestion helpers (DuckDB setup, etc.)
 │   └── __init__.py
 │
-├── orchestration/              # Dagster
-│   ├── assets.py
-│   ├── definitions.py
+├── orchestration/                  # Workflow orchestration (Dagster)
+│   ├── assets.py                   # Dagster asset definitions
+│   ├── definitions.py              # Dagster Definitions
 │   └── __init__.py
 │
-├── dbt/                        # dbt project
-│   ├── models/
-│   ├── macros/
+├── dbt/                            # Transformation layer (dbt)
+│   ├── models/                     # Analytics models
+│   ├── macros/                     
 │   ├── dbt_project.yml
 │   └── profiles.yml
 │
-├── duckdb/                     # Local DuckDB storage
+├── duckdb/                         # Local DuckDB storage
 │   └── football.duckdb
 │
-├── exploration/                # Notebooks / experiments
-│   └── duckdb_test.ipynb
+├── exploration/                    # Notebooks
 │
-├── docs/                       # Documentation
+├── docs/                           # Documentation
 │
-├── utils/                      # Shared helpers (optional)
-│
-├── dagster_defs.py             # Dagster entrypoint
-├── pyproject.toml
-├── uv.lock
-├── .env
+├── dagster_defs.py                 # Dagster entrypoint
+├── pyproject.toml                  
+├── uv.lock                         
+├── .env                            # Environment variables (ignored in git)
 ├── .gitignore
+├── .python-version                 
 └── README.md
+
 
 ```
 
