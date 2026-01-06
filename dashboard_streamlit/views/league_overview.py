@@ -112,7 +112,7 @@ def league_overview():
             color_continuous_scale='viridis'
         )
         fig.update_layout(
-            xaxis_tickangle=-45,
+            xaxis_tickangle=-90,
             height=400,
             showlegend=False,
             yaxis_title="Points"
@@ -136,7 +136,7 @@ def league_overview():
             marker_color='#e74c3c'
         ))
         fig.update_layout(
-            xaxis_tickangle=-45,
+            xaxis_tickangle=-90,
             height=400,
             barmode='group',
             yaxis_title="Goals"
