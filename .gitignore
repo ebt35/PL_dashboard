@@ -223,3 +223,6 @@ dbt/target/
 dbt/dbt_packages/
 dbt/profiles.yml
 duckdb/football.duckdb
+
+# Dagster runtime (auto-generated)
+.tmp_dagster_home_*
