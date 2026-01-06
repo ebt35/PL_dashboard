@@ -226,3 +226,6 @@ duckdb/football.duckdb
 
 # Dagster runtime (auto-generated)
 dagster_home/
+# Dagster runtime (auto-generated)
+.tmp_dagster_home_*
+
