@@ -225,4 +225,4 @@ dbt/profiles.yml
 duckdb/football.duckdb
 
 # Dagster runtime (auto-generated)
-.tmp_dagster_home_*
+dagster_home/
