@@ -13,20 +13,20 @@ def league_overview():
     player_df = get_player_kpis()
     
     st.header("League Summary Statistics")
-    st.caption("Key metrics across all teams in the Premier League")
+    st.caption("Key performance metrics across the Premier League")
     
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Total Teams", len(team_df))
     with col2:
-        st.metric("Total Goals Scored", int(team_df['goals_scored'].sum()))
+        st.metric("Goals Scored", int(team_df['goals_scored'].sum()))
     with col3:
-        st.metric("Total Matches Played", int(team_df['matches_played'].sum() / 2))
+        st.metric("Matches Played", int(team_df['matches_played'].sum() / 2))
     
     st.divider()
     
     st.header("Standings")
-    st.caption("Current league table showing team positions ranked by points and goal difference")
+    st.caption("Current league table showing teams ranked by points and goal difference")
     
     # Create standings with logos
     standings_html = "<div style='max-height: 1100px; overflow-y: auto;'>"
@@ -69,7 +69,7 @@ def league_overview():
     st.divider()
 
     st.header("Results & Fixtures")
-    st.caption("Latest played matches and upcoming fixtures for the league")
+    st.caption("Latest results and upcoming fixtures for the league")
 
     tab1, tab2 = st.tabs(["Results", "Fixtures"])
 
@@ -102,7 +102,7 @@ def league_overview():
     
     with col1:
         st.subheader("Points Distribution")
-        st.caption("Shows the points gap between teams. Higher bars indicate stronger teams. Color intensity represents point totals.")
+        st.caption("Shows the points gap between teams. Higher bars indicate stronger league performance. Color intensity represents point totals.")
         fig = px.bar(
             team_df,
             x='team_name',
@@ -121,7 +121,7 @@ def league_overview():
     
     with col2:
         st.subheader("Attacking vs Defensive Performance")
-        st.caption("Compares goals scored (green) vs goals conceded (red) for each team. Teams with more green than red have better attacking/defensive balance.")
+        st.caption("Compares goals scored (green) vs goals conceded (red) for each team. Teams with more green than red bars show a stronger attacking–defensive balance..")
         fig = go.Figure()
         fig.add_trace(go.Bar(
             x=team_df['team_name'],
@@ -146,7 +146,7 @@ def league_overview():
     st.divider()
     
     st.header("⚽ Top Goal Scorers")
-    st.caption("Leading players ranked by total goals")
+    st.caption("Players ranked by goals")
     
     top_scorers = player_df[['player_name', 'team_name', 'goals']].sort_values('goals', ascending=False).copy()
     top_scorers.columns = ['Player', 'Team', 'Goals']
@@ -184,7 +184,7 @@ def league_overview():
             color_continuous_scale='plasma'
         )
         fig.update_layout(
-            xaxis_tickangle=-45,
+            xaxis_tickangle=-90,
             height=300,
             showlegend=False
         )
@@ -193,7 +193,7 @@ def league_overview():
     st.divider()
     
     st.header("👟 Top Assist Providers")
-    st.caption("Leading players ranked by total assists")
+    st.caption("Leading players ranked by assists")
     
     top_assist_providers = player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
     top_assist_providers.columns = ['Player', 'Team', 'Assists']
@@ -231,7 +231,7 @@ def league_overview():
             color_continuous_scale='plasma'
         )
         fig.update_layout(
-            xaxis_tickangle=-45,
+            xaxis_tickangle=-90,
             height=300,
             showlegend=False
         )
@@ -240,27 +240,44 @@ def league_overview():
     st.divider()
     
     st.header("Goal Involvement Analysis")
-    st.caption("Bubble chart showing the relationship between goals and assists. Larger bubbles indicate higher total goal involvement. Players in the top-right are the most impactful.")
+    st.caption("Bubble chart showing the relationship between goals and assists. "
+        "Larger bubbles indicate higher total goal involvement.")
     
+    st.markdown("*The top-right quadrant highlights players combining goal scoring and creativity.*")
+
     top_involvement = player_df[['player_name', 'team_name', 'goal_involvement', 'goals', 'assists']].head(20)
-    
+
     fig = px.scatter(
         top_involvement,
         x='goals',
         y='assists',
         size='goal_involvement',
-        hover_data=['player_name', 'team_name'],
-        labels={'goals': 'Goals', 'assists': 'Assists', 'goal_involvement': 'Goal Involvement'},
         color='goal_involvement',
+        hover_name='player_name',   
+        hover_data={
+            'goals': True,
+            'assists': True,
+            'goal_involvement': True,
+            'team_name': True,
+            'player_name': False     
+        },
+        labels={
+            'goals': 'Goals',
+            'assists': 'Assists',
+            'goal_involvement': 'Goal Involvement',
+            'team_name': 'Team'
+        },
         color_continuous_scale='viridis'
     )
+
     fig.update_layout(height=500)
     st.plotly_chart(fig, use_container_width=True)
+
     
     st.divider()
 
-    st.header("Disciplinary Statistics")
-    st.caption("Most booked players across the league")
+    st.header("Disciplinary Recordss")
+    st.caption("The most booked players across the league")
 
     top_yellow_cards = player_df[['player_name', 'team_name', 'yellow_cards']].sort_values('yellow_cards', ascending=False).copy()
     top_yellow_cards.columns = ['Player', 'Team', 'Yellow Cards']
@@ -271,7 +288,7 @@ def league_overview():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Yellow Cards")
+        st.subheader("Yellow cards 🟨")
         yellow_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         yellow_html += "<table style='width: 100%; border-collapse: collapse;'>"
         yellow_html += "<thead><tr>"
@@ -291,7 +308,7 @@ def league_overview():
         st.markdown(yellow_html, unsafe_allow_html=True)
 
     with col2:
-        st.subheader("Red Cards")
+        st.subheader("Red cards 🟥")
         red_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         red_html += "<table style='width: 100%; border-collapse: collapse;'>"
         red_html += "<thead><tr>"
