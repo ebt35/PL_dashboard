@@ -192,7 +192,7 @@ def league_overview():
         
     st.divider()
     
-    st.header("👟 Top Assist Providers")
+    st.header("👟 Top Assist Leaders")
     st.caption("Leading players ranked by assists")
     
     top_assist_providers = player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
@@ -232,7 +232,7 @@ def league_overview():
         )
         fig.update_layout(
             xaxis_tickangle=-90,
-            height=300,
+            height=400,
             showlegend=False
         )
         st.plotly_chart(fig, use_container_width=True)
