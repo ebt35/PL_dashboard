@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-
+from utils.plotly_theme import apply_dark_plotly
 from data.queries import get_team_kpis, get_team_player_kpis
 
 def pluralize(value, singular, plural=None):
@@ -157,7 +157,9 @@ def team_overview():
             yaxis_title="Value",
             showlegend=True
         )
-        st.plotly_chart(fig, use_container_width=True)
+        fig = apply_dark_plotly(fig)
+
+        st.plotly_chart(fig, width="stretch")
     
     with col2:
         st.markdown("**League Standings Context**")
@@ -198,7 +200,9 @@ def team_overview():
             categoryarray=position_data["team_name"],
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        fig = apply_dark_plotly(fig)
+
+        st.plotly_chart(fig, width="stretch")
     
     st.divider()
     
@@ -282,7 +286,9 @@ def team_overview():
                 height=400
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            fig = apply_dark_plotly(fig)
+
+            st.plotly_chart(fig, width="stretch")
         
         with col2:
             st.markdown("**Goal Involvement Analysis**")
@@ -326,7 +332,9 @@ def team_overview():
                 yaxis=dict(showgrid=True, gridcolor="rgba(200,200,200,0.2)")
             )
 
-            st.plotly_chart(fig, use_container_width=True)
+            fig = apply_dark_plotly(fig)
+
+            st.plotly_chart(fig, width="stretch")
 
         st.divider()
 

@@ -1,0 +1,130 @@
+/* =========================
+   GLOBAL TYPOGRAPHY
+========================= */
+
+html, body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #ffffff;
+    color: #0f172a;
+}
+
+/* =========================
+   HEADERS
+========================= */
+
+h1 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+h2, h3 {
+    font-weight: 600;
+}
+
+/* =========================
+   SECTION SPACING
+========================= */
+
+section[data-testid="stVerticalBlock"] {
+    gap: 1.25rem;
+}
+
+/* =========================
+   METRICS
+========================= */
+
+div[data-testid="metric-container"] {
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: #ffffff;
+}
+
+div[data-testid="stMetricValue"] {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+div[data-testid="stMetricDelta"] {
+    font-size: 0.9rem;
+}
+
+/* =========================
+   PLOTLY
+========================= */
+
+.js-plotly-plot {
+    border-radius: 14px;
+    background-color: #ffffff;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.js-plotly-plot text {
+    font-family: "Inter", sans-serif !important;
+}
+
+/* =========================
+   TABLES
+========================= */
+
+thead tr th {
+    background-color: #f7f7f9;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* =========================
+   SECTION CARDS
+========================= */
+
+.section-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* =========================
+   CONTENT CARD (LIGHT MODE)
+========================= */
+.content-card {
+    background: #ffffff;
+    color: #111827;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.content-card h2 {
+    margin-top: 0;
+}
+
+/* =========================
+   DOWNLOAD BUTTON FIX
+   ========================= */
+
+/* spacing så knappen hör ihop med sektionen ovan */
+.stDownloadButton {
+    margin-top: 0.75rem;
+    margin-bottom: 2.5rem;
+}
+
+/* gör knappen neutral i light mode */
+.stDownloadButton button {
+    background-color: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+}
+
+.stDownloadButton button:hover {
+    border-color: #6366f1;
+    color: #111827;
+}
+

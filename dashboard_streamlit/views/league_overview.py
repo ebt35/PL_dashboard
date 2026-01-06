@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+from utils.plotly_theme import apply_dark_plotly
 from data.queries import get_team_kpis, get_player_kpis, get_last_results, get_next_fixtures
 
 
@@ -78,10 +79,18 @@ def league_overview():
         if results_df.empty:
             st.info("No played matches found.")
         else:
-            # clear dateformat
             results_df["date"] = pd.to_datetime(results_df["date"]).dt.strftime("%Y-%m-%d %H:%M")
             results_df.columns = ["Date", "Match", "Score", "Round", "Venue"]
-            st.dataframe(results_df, use_container_width=True, hide_index=True)
+
+            st.markdown(
+                f"""
+                <div class="table-scroll">
+                    {results_df.to_html(index=False, classes="dark-table")}
+                </div>
+                """,
+                unsafe_allow_html=True
+)
+
 
     with tab2:
         fixtures_df = get_next_fixtures(100)
@@ -90,7 +99,16 @@ def league_overview():
         else:
             fixtures_df["date"] = pd.to_datetime(fixtures_df["date"]).dt.strftime("%Y-%m-%d %H:%M")
             fixtures_df.columns = ["Date", "Match", "Round", "Venue"]
-            st.dataframe(fixtures_df, use_container_width=True, hide_index=True)
+
+            st.markdown(
+                f"""
+                <div class="table-scroll">
+                    {fixtures_df.to_html(index=False, classes="dark-table")}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
 
 
     st.divider()
@@ -117,7 +135,9 @@ def league_overview():
             showlegend=False,
             yaxis_title="Points"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        fig = apply_dark_plotly(fig)
+
+        st.plotly_chart(fig, width="stretch")
     
     with col2:
         st.subheader("Attacking vs Defensive Performance")
@@ -141,7 +161,9 @@ def league_overview():
             barmode='group',
             yaxis_title="Goals"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        fig = apply_dark_plotly(fig)
+
+        st.plotly_chart(fig, width="stretch")
     
     st.divider()
     
@@ -175,6 +197,7 @@ def league_overview():
     with col2:
         st.subheader("Top 5 Goal Scorers")
         st.caption("Visual representation of the league's most prolific scorers")
+
         fig = px.bar(
             top_scorers.head(5),
             x='Player',
@@ -183,13 +206,16 @@ def league_overview():
             color='Goals',
             color_continuous_scale='plasma'
         )
+
         fig.update_layout(
             xaxis_tickangle=-90,
             height=300,
             showlegend=False
         )
-        st.plotly_chart(fig, use_container_width=True)
-        
+
+        fig = apply_dark_plotly(fig)
+        st.plotly_chart(fig, width="stretch")
+  
     st.divider()
     
     st.header("👟 Top Assist Leaders")
@@ -244,7 +270,9 @@ def league_overview():
         )
     )
 
-        st.plotly_chart(fig, use_container_width=True)
+        fig = apply_dark_plotly(fig)
+
+        st.plotly_chart(fig, width="stretch")
     
     st.divider()
     
@@ -280,7 +308,9 @@ def league_overview():
     )
 
     fig.update_layout(height=500)
-    st.plotly_chart(fig, use_container_width=True)
+    fig = apply_dark_plotly(fig)
+
+    st.plotly_chart(fig, width="stretch")
 
     
     st.divider()
