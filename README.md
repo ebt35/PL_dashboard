@@ -9,7 +9,7 @@ This is an MVP implementation of a Premier League Data Platform that demonstrate
 ```
 API-Football → dlt → DuckDB (RAW) → dbt → Dagster → Streamlit
 ```
-<img src="utils/architecture.png" alt="architecture" width="700">
+<img src="assets/architecture.png" alt="architecture" width="700">
 
 ## Project Structure
 
