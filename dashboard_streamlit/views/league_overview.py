@@ -235,6 +235,15 @@ def league_overview():
             height=400,
             showlegend=False
         )
+        fig.update_coloraxes(
+            colorbar=dict(
+            title="Assists",
+            tickmode="array",
+            tickvals=sorted(top_assist_providers["Assists"].unique()),
+            ticktext=[str(v) for v in sorted(top_assist_providers["Assists"].unique())]
+        )
+    )
+
         st.plotly_chart(fig, use_container_width=True)
     
     st.divider()
