@@ -9,6 +9,7 @@ def get_team_kpis():
         return conn.execute("""
             SELECT DISTINCT
                 team_name,
+                rank,
                 team_logo,
                 matches_played,
                 total_points,
