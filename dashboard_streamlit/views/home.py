@@ -12,7 +12,7 @@ def home_page():
     )
 
     # Banner
-    logo_path = os.path.join(project_root, "utils", "hero-banner.png")
+    logo_path = os.path.join(project_root, "assets", "hero-banner.png")
     if os.path.exists(logo_path):
         st.image(logo_path, use_container_width=False)
 
