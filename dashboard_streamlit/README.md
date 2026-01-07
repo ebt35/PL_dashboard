@@ -21,13 +21,20 @@ Premier League Data Platform - Streamlit Dashboard
 - Goal difference
 - Total points
 - Form
-
+- Results & Fixtures
+- Club information
+- Core Team Performance Metrics
+- Performance Benchmarking
+- Squad Performance Metrics
+- Disciplinary Records
+  
 ### Player KPIs
 - Goals
 - Assists
 - Goal involvement
 - Goals per game
 - Assists per game
+- Disciplinary Records
 
 ## Usage
 
@@ -36,6 +43,10 @@ Run the dashboard:
 cd dashboard_streamlit
 
 uv run streamlit run app.py
+
+or
+
+uv run streamlit run dashboard_streamlit.app.py
 ```
 
 The dashboard will open in your browser at `http://localhost:8501`
