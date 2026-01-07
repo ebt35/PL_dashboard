@@ -281,9 +281,9 @@ def team_overview():
             )
 
             fig.update_layout(
-                xaxis_tickangle=-45,
+                xaxis_tickangle=-90,
                 legend_title_text="",
-                height=400
+                height=450
             )
 
             fig = apply_dark_plotly(fig)
