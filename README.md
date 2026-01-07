@@ -78,6 +78,7 @@ PL_DASHBOARD/
 - RAW schema for storing raw API responses
 
 ### 3. Transformation (dbt)
+[`dbt/README.md`]
 - **src**: Source models from RAW
 - **stg**: Staging/cleaned models
 - **mart**: Analytical models
@@ -85,10 +86,12 @@ PL_DASHBOARD/
   - `mart_player_kpi`: Player KPIs
 
 ### 4. Orchestration (Dagster)
+[`orchestration/README.md`]
 - `pl_mvp_pipeline`: Main pipeline job
 - Runs dlt ingestion + dbt transformations
 
 ### 5. Visualization (Streamlit)
+[`dashboard_streamlit/README.md`]
 - **League Overview**: League-wide statistics
 - **Team Overview**: Team-specific KPIs
 
