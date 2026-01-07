@@ -78,7 +78,7 @@ PL_DASHBOARD/
 - RAW schema for storing raw API responses
 
 ### 3. Transformation (dbt)
-[`dbt/README.md`]
+[dbt/README.md](dbt/README.md)
 - **src**: Source models from RAW
 - **stg**: Staging/cleaned models
 - **mart**: Analytical models
@@ -86,14 +86,15 @@ PL_DASHBOARD/
   - `mart_player_kpi`: Player KPIs
 
 ### 4. Orchestration (Dagster)
-[`orchestration/README.md`]
+[orchestration/README.md](orchestration/README.md)
 - `pl_mvp_pipeline`: Main pipeline job
 - Runs dlt ingestion + dbt transformations
 
 ### 5. Visualization (Streamlit)
-[`dashboard_streamlit/README.md`]
+[dashboard_streamlit/README.md](dashboard_streamlit/README.md)
 - **League Overview**: League-wide statistics
 - **Team Overview**: Team-specific KPIs
+
 
 ## Data Sources
 
@@ -132,11 +133,11 @@ PL_DASHBOARD/
 
 **Included:**
 - Fixtures, Teams, Standings, Top Scorers and players data
-- Basic team and player KPIs
+- Basic team and player KPIs including bookings
 - Automated ELT pipeline
 
 **Out of Scope:**
-- Advanced statistics (xG, injuries, cards)
+- Advanced statistics (xG, injuries)
 - CI/CD pipelines
 - Forecasting or ML
 - Multi-league support
