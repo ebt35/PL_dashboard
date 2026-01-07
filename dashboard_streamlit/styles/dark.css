@@ -247,3 +247,94 @@ div[data-testid="stDataFrame"] ::-webkit-scrollbar-thumb {
     background-color: #1e293b;
     border-radius: 6px;
 }
+
+/* =========================
+   METRIC HELP TOOLTIP — FORCE DARK (Streamlit/BaseWeb)
+   Klistra LÄNGST NER i dark.css
+========================= */
+
+/* 1) Tooltip-root (portal/wrapper) */
+div[data-baseweb="tooltip"],
+div[role="tooltip"] {
+  background: transparent !important;
+}
+
+/* 2) Tooltip-innehåll (BaseWeb lägger ofta 1–2 wrappers) */
+div[role="tooltip"] > div,
+div[role="tooltip"] > div > div,
+div[data-baseweb="tooltip"] > div,
+div[data-baseweb="tooltip"] > div > div {
+  background-color: #020617 !important;
+  color: #e5e7eb !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6) !important;
+}
+
+/* 3) Tvinga tooltip-text att vara ljus */
+div[role="tooltip"] *,
+div[data-baseweb="tooltip"] * {
+  color: #e5e7eb !important;
+  opacity: 1 !important;
+}
+
+/* 4) Pilar/arrow (kan vara svg eller div) */
+div[role="tooltip"] svg,
+div[data-baseweb="tooltip"] svg {
+  fill: #020617 !important;
+  stroke: #1e293b !important;
+}
+
+/* =========================
+   HELP-IKONEN (?) — FORCE VISIBLE
+========================= */
+
+/* Själva knappen */
+button[data-testid="stMetricHelp"],
+button[aria-label*="Help"],
+button[title*="Help"] {
+  background: transparent !important;
+  opacity: 1 !important;
+}
+
+/* Ikonen är ofta SVG → färga svg + path */
+button[data-testid="stMetricHelp"] svg,
+button[aria-label*="Help"] svg,
+button[title*="Help"] svg,
+button[data-testid="stMetricHelp"] svg path,
+button[aria-label*="Help"] svg path,
+button[title*="Help"] svg path {
+  fill: #94a3b8 !important;
+  stroke: #94a3b8 !important;
+  color: #94a3b8 !important;
+  opacity: 0.95 !important;
+}
+
+/* Hover: ljusare */
+button[data-testid="stMetricHelp"]:hover svg,
+button[aria-label*="Help"]:hover svg,
+button[title*="Help"]:hover svg,
+button[data-testid="stMetricHelp"]:hover svg path,
+button[aria-label*="Help"]:hover svg path,
+button[title*="Help"]:hover svg path {
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+  color: #e5e7eb !important;
+  opacity: 1 !important;
+}
+
+/* Bonus: gör klickytan lite större utan att synas */
+button[data-testid="stMetricHelp"],
+button[aria-label*="Help"],
+button[title*="Help"] {
+  padding: 2px 6px !important;
+  border-radius: 8px !important;
+}
+
+/* Fokus (keyboard) */
+button[data-testid="stMetricHelp"]:focus-visible,
+button[aria-label*="Help"]:focus-visible,
+button[title*="Help"]:focus-visible {
+  outline: 2px solid #38bdf8 !important;
+  outline-offset: 2px !important;
+}
