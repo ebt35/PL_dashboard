@@ -4,6 +4,9 @@
 
 This is an MVP implementation of a Premier League Data Platform that demonstrates modern data engineering principles through an automated ELT pipeline.
 
+**Live Demo (VM):** [http://51.120.6.116:8501](http://51.120.6.116:8501)
+
+
 ## Architecture
 
 ```
