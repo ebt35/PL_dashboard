@@ -15,15 +15,15 @@ API-Football → dlt → DuckDB (RAW) → dbt → Dagster → Streamlit
 
 ```
 PL_DASHBOARD/
-├── assets/                         # Static assets used by the dashboard
-│   ├── hero-banner.png             # Homepage hero image
+├── assets/                         # Static assets 
+│   ├── hero-banner.png             # Homepage image
 │   └── architecture.png            # System architecture diagram
 │
-├── dashboard_streamlit/             # Streamlit application (presentation layer)
+├── dashboard_streamlit/            # Streamlit 
 │   ├── app.py                      # Main Streamlit entrypoint
 │   ├── data/                       # Cached / prepared datasets for the UI
-│   ├── views/                      # Page-level views
-│   │   ├── home.py                 # Homepage / introduction
+│   ├── views/                      # 
+│   │   ├── home.py                 # Homepage 
 │   │   ├── league_overview.py      # League-level analytics
 │   │   ├── team_overview.py        # Team-level analytics
 │   │   └── source_datasets.py      # Data source overview / metadata
