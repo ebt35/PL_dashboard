@@ -149,7 +149,7 @@ def team_overview():
             x=comparison_data['Metric'],
             y=comparison_data['League Avg'],
             name='League Average',
-            marker_color='#95a5a6'
+            marker_color='#22c55e'
         ))
         fig.update_layout(
             barmode='group',
