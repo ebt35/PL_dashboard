@@ -14,7 +14,7 @@ def home_page():
     # Banner
     logo_path = os.path.join(project_root, "assets", "hero-banner.png")
     if os.path.exists(logo_path):
-        st.image(logo_path, use_container_width=False)
+        st.image(logo_path, width='content')
 
     st.divider()
 
