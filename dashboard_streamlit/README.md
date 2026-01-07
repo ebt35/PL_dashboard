@@ -40,13 +40,9 @@ Premier League Data Platform - Streamlit Dashboard
 
 Run the dashboard:
 ```bash
-cd dashboard_streamlit
-
-uv run streamlit run app.py
-
-or
 
 uv run streamlit run dashboard_streamlit/app.py
+
 ```
 
 The dashboard will open in your browser at `http://localhost:8501`
