@@ -46,7 +46,7 @@ uv run streamlit run app.py
 
 or
 
-uv run streamlit run dashboard_streamlit.app.py
+uv run streamlit run dashboard_streamlit/app.py
 ```
 
 The dashboard will open in your browser at `http://localhost:8501`
