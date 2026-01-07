@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  dagster:
+    build: .
+    container_name: pl_dashboard_dagster
+    ports:
+      - "3000:3000"
+    environment:
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      - DUCKDB_PATH=/app/duckdb/football.duckdb
+      - PYTHONPATH=/app
+    volumes:
+      - ./duckdb:/app/duckdb
+      - ./dbt:/app/dbt
+      - ./dagster_home:/app/dagster_home
+    command: >
+      uv run dagster dev
+      -m dagster_defs
+      --host 0.0.0.0
+      --port 3000
+    restart: unless-stopped
+
+  streamlit:
+    build: .
+    container_name: pl_dashboard_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      - DUCKDB_PATH=/app/duckdb/football.duckdb
+      - PYTHONPATH=/app
+    volumes:
+      - ./duckdb:/app/duckdb:ro
+    command: >
+      uv run streamlit run dashboard_streamlit/app.py
+      --server.address=0.0.0.0
+      --server.port=8501
+    restart: unless-stopped
