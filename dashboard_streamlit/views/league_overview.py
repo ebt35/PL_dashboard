@@ -170,8 +170,8 @@ def league_overview():
     st.header("⚽ Top Goal Scorers")
     st.caption("Players ranked by goals")
     
-    top_scorers = player_df[['player_name', 'team_name', 'goals']].sort_values('goals', ascending=False).copy()
-    top_scorers.columns = ['Player', 'Team', 'Goals']
+    top_scorers = player_df[['player_name', 'team_name', 'goals', 'player_photo']].sort_values('goals', ascending=False).copy()
+    top_scorers.columns = ['Player', 'Team', 'Goals', 'player_photo']
     
     col1, col2 = st.columns([2, 1])
     
@@ -179,13 +179,21 @@ def league_overview():
         scorers_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         scorers_html += "<table style='width: 100%; border-collapse: collapse;'>"
         scorers_html += "<thead><tr>"
+        scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd; width: 44px;'></th>"
         scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
         scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
         scorers_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goals</th>"
         scorers_html += "</tr></thead><tbody>"
         
         for _, row in top_scorers.head(10).iterrows():
+            photo = row.get("player_photo", None)
+            photo_html = (
+                f"<img src='{photo}' style='width: 35px; height: 35px; border-radius: 50%; object-fit: cover;' "
+                f"onerror='this.style.display=\"none\"'>"
+                if pd.notna(photo) and str(photo).strip() != "" else ""
+            )
             scorers_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            scorers_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}</td>"
             scorers_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
             scorers_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
             scorers_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goals']) if pd.notna(row['Goals']) else 0}</td>"
@@ -221,8 +229,8 @@ def league_overview():
     st.header("👟 Top Assist Leaders")
     st.caption("Leading players ranked by assists")
     
-    top_assist_providers = player_df[['player_name', 'team_name', 'assists']].sort_values('assists', ascending=False).copy()
-    top_assist_providers.columns = ['Player', 'Team', 'Assists']
+    top_assist_providers = player_df[['player_name', 'team_name', 'assists', 'player_photo']].sort_values('assists', ascending=False).copy()
+    top_assist_providers.columns = ['Player', 'Team', 'Assists', 'player_photo']
     
     col1, col2 = st.columns([2, 1])
     
@@ -230,13 +238,21 @@ def league_overview():
         assists_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         assists_html += "<table style='width: 100%; border-collapse: collapse;'>"
         assists_html += "<thead><tr>"
+        assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd; width: 44px;'></th>"
         assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
         assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
         assists_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Assists</th>"
         assists_html += "</tr></thead><tbody>"
         
         for _, row in top_assist_providers.head(10).iterrows():
+            photo = row.get("player_photo", None)
+            photo_html = (
+                f"<img src='{photo}' style='width: 35px; height: 35px; border-radius: 50%; object-fit: cover;' "
+                f"onerror='this.style.display=\"none\"'>"
+                if pd.notna(photo) and str(photo).strip() != "" else ""
+            )
             assists_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            assists_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}</td>"
             assists_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
             assists_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
             assists_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Assists']) if pd.notna(row['Assists']) else 0}</td>"
@@ -318,11 +334,11 @@ def league_overview():
     st.header("Disciplinary Recordss")
     st.caption("The most booked players across the league")
 
-    top_yellow_cards = player_df[['player_name', 'team_name', 'yellow_cards']].sort_values('yellow_cards', ascending=False).copy()
-    top_yellow_cards.columns = ['Player', 'Team', 'Yellow Cards']
+    top_yellow_cards = player_df[['player_name', 'team_name', 'yellow_cards', 'player_photo']].sort_values('yellow_cards', ascending=False).copy()
+    top_yellow_cards.columns = ['Player', 'Team', 'Yellow Cards', 'player_photo']
 
-    top_red_cards = player_df[['player_name', 'team_name', 'red_cards']].sort_values('red_cards', ascending=False).copy()
-    top_red_cards.columns = ['Player', 'Team', 'Red Cards']
+    top_red_cards = player_df[['player_name', 'team_name', 'red_cards', 'player_photo']].sort_values('red_cards', ascending=False).copy()
+    top_red_cards.columns = ['Player', 'Team', 'Red Cards', 'player_photo']
 
     col1, col2 = st.columns(2)
 
@@ -331,13 +347,21 @@ def league_overview():
         yellow_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         yellow_html += "<table style='width: 100%; border-collapse: collapse;'>"
         yellow_html += "<thead><tr>"
+        yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd; width: 44px;'></th>"
         yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
         yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
         yellow_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Yellow Cards</th>"
         yellow_html += "</tr></thead><tbody>"
 
         for _, row in top_yellow_cards.head(10).iterrows():
+            photo = row.get("player_photo", None)
+            photo_html = (
+                f"<img src='{photo}' style='width: 35px; height: 35px; border-radius: 50%; object-fit: cover;' "
+                f"onerror='this.style.display=\"none\"'>"
+                if pd.notna(photo) and str(photo).strip() != "" else ""
+            )
             yellow_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            yellow_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}</td>"
             yellow_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
             yellow_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
             yellow_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Yellow Cards']) if pd.notna(row['Yellow Cards']) else 0}</td>"
@@ -351,13 +375,21 @@ def league_overview():
         red_html = "<div style='max-height: 420px; overflow-y: auto;'>"
         red_html += "<table style='width: 100%; border-collapse: collapse;'>"
         red_html += "<thead><tr>"
+        red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd; width: 44px;'></th>"
         red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
         red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Team</th>"
         red_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Red Cards</th>"
         red_html += "</tr></thead><tbody>"
 
         for _, row in top_red_cards.head(10).iterrows():
+            photo = row.get("player_photo", None)
+            photo_html = (
+                f"<img src='{photo}' style='width: 35px; height: 35px; border-radius: 50%; object-fit: cover;' "
+                f"onerror='this.style.display=\"none\"'>"
+                if pd.notna(photo) and str(photo).strip() != "" else ""
+            )
             red_html += "<tr style='border-bottom: 1px solid #eee;'>"
+            red_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}</td>"
             red_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
             red_html += f"<td style='padding: 10px; text-align: left;'>{row['Team']}</td>"
             red_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Red Cards']) if pd.notna(row['Red Cards']) else 0}</td>"

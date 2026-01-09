@@ -213,30 +213,34 @@ def team_overview():
         col1, col2, col3 = st.columns([3, 1, 1])
 
         with col1:
-            display_df = player_df[['player_name', 'goals', 'assists', 'goal_involvement', 'games_appearances']].copy()
-            display_df.columns = ['Player', 'Goals', 'Assists', 'Goal Involvement', 'Appearances']
+            display_df = player_df[['player_photo', 'player_name', 'goals', 'assists', 'goal_involvement', 'games_appearances']].copy()
+            display_df.columns = ['player_hoto', 'Player', 'Goals', 'Assists', 'Goal Involvement', 'Appearances']
 
-            table_html = "<div style='max-height: 600px; overflow-y: auto;'>"
-            table_html += "<table style='width: 100%; border-collapse: collapse;'>"
-            table_html += "<thead><tr>"
-            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
-            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goals</th>"
-            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Assists</th>"
-            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Goal Involvement</th>"
-            table_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Appearances</th>"
-            table_html += "</tr></thead><tbody>"
+            players_html = "<div style='max-height: 520px; overflow-y: auto;'>"
+            players_html += "<table style='width: 100%; border-collapse: collapse;'>"
+            players_html += "<thead><tr style='background-color: #f0f0f0; position: sticky; top: 0;'>"
+            players_html += "<th style='padding: 10px; text-align: left;'>Player</th>"
+            players_html += "<th style='padding: 10px; text-align: right;'>Goals</th>"
+            players_html += "<th style='padding: 10px; text-align: right;'>Assists</th>"
+            players_html += "<th style='padding: 10px; text-align: right;'>Involvement</th>"
+            players_html += "<th style='padding: 10px; text-align: right;'>Apps</th>"
+            players_html += "</tr></thead><tbody>"
 
             for _, row in display_df.iterrows():
-                table_html += "<tr style='border-bottom: 1px solid #eee;'>"
-                table_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
-                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goals']) if pd.notna(row['Goals']) else 0}</td>"
-                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Assists']) if pd.notna(row['Assists']) else 0}</td>"
-                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Goal Involvement']) if pd.notna(row['Goal Involvement']) else 0}</td>"
-                table_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Appearances']) if pd.notna(row['Appearances']) else 0}</td>"
-                table_html += "</tr>"
+                photo_html = (
+                    f"<img src='{row['player_hoto']}' style='width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; vertical-align: middle;' onerror='this.style.display=\"none\"'>"
+                    if row.get("player_hoto") else ""
+                )
+                players_html += "<tr style='border-bottom: 1px solid #ddd;'>"
+                players_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}<strong>{row['Player']}</strong></td>"
+                players_html += f"<td style='padding: 10px; text-align: right;'>{int(row['Goals']) if pd.notna(row['Goals']) else 0}</td>"
+                players_html += f"<td style='padding: 10px; text-align: right;'>{int(row['Assists']) if pd.notna(row['Assists']) else 0}</td>"
+                players_html += f"<td style='padding: 10px; text-align: right;'><strong>{int(row['Goal Involvement']) if pd.notna(row['Goal Involvement']) else 0}</strong></td>"
+                players_html += f"<td style='padding: 10px; text-align: right;'>{int(row['Appearances']) if pd.notna(row['Appearances']) else 0}</td>"
+                players_html += "</tr>"
 
-            table_html += "</tbody></table></div>"
-            st.markdown(table_html, unsafe_allow_html=True)
+            players_html += "</tbody></table></div>"
+            st.markdown(players_html, unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Top 3 Goal Scorers**")
@@ -341,8 +345,8 @@ def team_overview():
         st.subheader("🟨🟥 Disciplinary Records (Squad)")
         st.caption("Summary of yellow and red cards accumulated by squad players.")
 
-        cards_df = player_df[["player_name", "yellow_cards", "red_cards"]].copy()
-        cards_df.columns = ["Player", "Yellow Cards", "Red Cards"]
+        cards_df = player_df[['player_photo', 'player_name', 'yellow_cards', 'red_cards']].copy()
+        cards_df.columns = ['player_photo', 'Player', 'Yellow Cards', 'Red Cards']
         cards_df = cards_df.sort_values(by=["Yellow Cards", "Red Cards"], ascending=False)
 
         cards_html = "<div style='max-height: 600px; overflow-y: auto;'>"
@@ -354,8 +358,12 @@ def team_overview():
         cards_html += "</tr></thead><tbody>"
 
         for _, row in cards_df.iterrows():
+            photo_html = (
+                f"<img src='{row['player_photo']}' style='width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; vertical-align: middle;' onerror='this.style.display=\"none\"'>"
+                if row.get("player_photo") else ""
+            )
             cards_html += "<tr style='border-bottom: 1px solid #eee;'>"
-            cards_html += f"<td style='padding: 10px; text-align: left;'>{row['Player']}</td>"
+            cards_html += f"<td style='padding: 10px; text-align: left;'>{photo_html}<strong>{row['Player']}</td>"
             cards_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Yellow Cards']) if pd.notna(row['Yellow Cards']) else 0}</td>"
             cards_html += f"<td style='padding: 10px; text-align: left;'>{int(row['Red Cards']) if pd.notna(row['Red Cards']) else 0}</td>"
             cards_html += "</tr>"
