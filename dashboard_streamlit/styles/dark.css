@@ -338,3 +338,22 @@ button[title*="Help"]:focus-visible {
   outline: 2px solid #38bdf8 !important;
   outline-offset: 2px !important;
 }
+
+/* =========================
+   COMPACT STAT CARDS (SIDE BY SIDE)
+========================= */
+
+.compact-card {
+    max-width: 340px;
+    padding: 1rem 1.25rem !important;
+  }
+  
+  .compact-card h5 {
+    margin-bottom: 0.6rem;
+  }
+  
+  .compact-card p {
+    margin: 0;
+    line-height: 1.55;
+  }
+  

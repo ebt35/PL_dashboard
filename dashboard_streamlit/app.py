@@ -5,6 +5,8 @@ from views.home import home_page
 from views.league_overview import league_overview
 from views.team_overview import team_overview
 from views.source_datasets import source_datasets
+from views.player_overview import player_overview
+
 
 
 # =========================
@@ -53,7 +55,7 @@ def main():
     st.sidebar.title("PREMIER LEAGUE DASHBOARD")
     page = st.sidebar.selectbox(
         "Select Page",
-        ["Home", "League Overview", "Team Overview", "Source Datasets"],
+        ["Home", "League Overview", "Team Overview", "Player Overview", "Source Datasets"],
         index=0
     )
 
@@ -63,6 +65,8 @@ def main():
         league_overview()
     elif page == "Team Overview":
         team_overview()
+    elif page == "Player Overview":
+        player_overview()
     elif page == "Source Datasets":
         source_datasets()
 

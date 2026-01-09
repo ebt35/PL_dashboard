@@ -40,13 +40,19 @@ def get_player_kpis():
         query = """
             SELECT DISTINCT
                 player_name,
+                player_id,
                 team_name,
+                player_age,
+                player_nationality,
+                games_position,
                 goals,
+                player_photo,
                 assists,
                 yellow_cards,
                 red_cards,
                 goal_involvement,
                 games_appearances,
+                games_minutes,
                 goals_per_game,
                 assists_per_game,
                 goal_involvement_per_game
@@ -66,7 +72,11 @@ def get_team_player_kpis(team_name):
         query = """
             SELECT DISTINCT
                 player_name,
+                player_id,
                 goals,
+                player_age,
+                player_nationality,
+                player_photo,
                 assists,
                 yellow_cards,
                 red_cards,

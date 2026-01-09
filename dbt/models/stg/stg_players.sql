@@ -7,6 +7,7 @@ WITH source AS (
         player_age,
         player_nationality,
         team_id,
+        player_photo,
         team_name,
         games_appearances,
         games_minutes,

@@ -4,6 +4,8 @@ SELECT DISTINCT
     player_nationality,
     team_id,
     team_name,
+    player_photo,
+    player_age,
     games_appearances,
     games_minutes,
     games_position,
