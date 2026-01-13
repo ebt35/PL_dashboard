@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# System dependencies (lägg till fler om du behöver för dina paket)
+# System dependencies 
 RUN apt-get update && apt-get install -y \
     curl \
     build-essential \
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 # Install uv
 RUN pip install --no-cache-dir uv
 
-# Copy dependency files first (bättre cache)
+# Copy dependency files first 
 COPY pyproject.toml uv.lock ./
 
 # Install deps into a local venv (.venv)
@@ -34,5 +34,5 @@ ENV DUCKDB_PATH=/app/duckdb/football.duckdb
 # Ports: Dagster UI + Streamlit
 EXPOSE 3000 8501
 
-# Default CMD: Dagster (Streamlit körs via compose command)
+# Default CMD: Dagster 
 CMD ["dagster", "dev", "-m", "dagster_defs", "--host", "0.0.0.0", "--port", "3000"]
