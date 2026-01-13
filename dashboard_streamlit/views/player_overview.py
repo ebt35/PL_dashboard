@@ -92,6 +92,8 @@ def player_overview():
             </p>
         </div>
         """, unsafe_allow_html=True)
+    
+    st.divider()
 
     #Performance&usage
     col_perf, col_usage = st.columns([1, 4])

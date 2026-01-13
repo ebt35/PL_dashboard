@@ -143,7 +143,7 @@ def team_overview():
             x=comparison_data['Metric'],
             y=comparison_data['Team'],
             name='Team',
-            marker_color='#3498db'
+            marker_color='#d8cfc4'
         ))
         fig.add_trace(go.Bar(
             x=comparison_data['Metric'],
@@ -216,9 +216,9 @@ def team_overview():
             display_df = player_df[['player_photo', 'player_name', 'goals', 'assists', 'goal_involvement', 'games_appearances']].copy()
             display_df.columns = ['player_hoto', 'Player', 'Goals', 'Assists', 'Goal Involvement', 'Appearances']
 
-            players_html = "<div style='max-height: 520px; overflow-y: auto;'>"
-            players_html += "<table style='width: 100%; border-collapse: collapse;'>"
-            players_html += "<thead><tr style='background-color: #f0f0f0; position: sticky; top: 0;'>"
+            players_html = "<div style='max-height: 500px; overflow-y: auto;'>"
+            players_html += "<table style='width: 80%; border-collapse: collapse;'>"
+            players_html += "<thead><tr>"
             players_html += "<th style='padding: 10px; text-align: left;'>Player</th>"
             players_html += "<th style='padding: 10px; text-align: right;'>Goals</th>"
             players_html += "<th style='padding: 10px; text-align: right;'>Assists</th>"
@@ -349,7 +349,7 @@ def team_overview():
         cards_df.columns = ['player_photo', 'Player', 'Yellow Cards', 'Red Cards']
         cards_df = cards_df.sort_values(by=["Yellow Cards", "Red Cards"], ascending=False)
 
-        cards_html = "<div style='max-height: 600px; overflow-y: auto;'>"
+        cards_html = "<div style='max-height: 500px; overflow-y: auto;'>"
         cards_html += "<table style='width: 50%; border-collapse: collapse;'>"
         cards_html += "<thead><tr>"
         cards_html += "<th style='padding: 10px; text-align: left; border-bottom: 1px solid #ddd;'>Player</th>"
